@@ -21,14 +21,6 @@ Objetivos específicos por módulo
     Envío y seguimiento: generar etiqueta/envío simulado, asignar número de seguimiento y permitir consultar estado.
 
 Recepción del pedido
-Algoritmo
-1. Recibir entrada 
-
-Verificación de disponibilidad
-
-Procesamiento de pago
-
-Preparación del pedido
 
 Algoritmo
 1. Verificar precondiciones
