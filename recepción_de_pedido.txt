@@ -1,25 +1,3 @@
-Consigna de desarrollo: Sistema de gestión de pedidos en una tienda en línea
-    Recepción del pedido
-    Verificación de disponibilidad
-    Procesamiento de pago
-    Preparación del pedido
-    Envío y seguimiento
-
-Primer entrega: 
-Objetivo general
-    Desarrollar un sistema modular que gestione el ciclo completo de un pedido online desde la recepción hasta el envío y seguimiento, permitiendo ejecución independiente de cada módulo y simulación de la base de datos y del pago.
-
-Objetivos específicos por módulo
-    Recepción del pedido: recibir entrada (JSON), validar formato mínimo y encolar el pedido para el siguiente paso.
-
-    Verificación de disponibilidad: chequear stock para cada SKU, reservar stock temporalmente o indicar faltantes.
-
-    Procesamiento de pago: validar método de pago, simular autorización y marcar pago como aprobado/rechazado.
-
-    Preparación del pedido: generar picking list, asignar empaquetado y marcar como listo para envío.
-
-    Envío y seguimiento: generar etiqueta/envío simulado, asignar número de seguimiento y permitir consultar estado.
-
 Recepción del pedido
 
 Algoritmo
@@ -54,7 +32,7 @@ Nivel 2
 4.3.1 Actualizar pedido
 5.1.1 Retornar pedido.preparacion 
 
-Pseudocódigo (preparacion)
+Pseudocódigo
 FUNCTION preparar_pedido(pedido_id):
 1.1.1    pedido = db_simulator.obtener_pedido(pedido_id)
 1.2.1    IF pedido.verificacion.status != 'OK' OR pedido.estado != 'PAGO_APROBADO':
