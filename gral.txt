@@ -7,7 +7,8 @@ Consigna de desarrollo: Sistema de gestión de pedidos en una tienda en línea
 
 Primer entrega: 
 Objetivo general
-    Desarrollar un sistema modular que gestione el ciclo completo de un pedido online desde la recepción hasta el envío y seguimiento, permitiendo ejecución independiente de cada módulo y simulación de la base de datos y del pago.
+    Desarrollar un sistema modular que gestione el ciclo completo de un pedido online desde la recepción hasta el envío y seguimiento, permitiendo ejecución independiente de cada módulo y simulación de la base de datos y del pago. 
+    Asumimos envio unicamente a domicilio particular.
 
 Objetivos específicos por módulo
     Recepción del pedido: recibir entrada (JSON), validar formato mínimo y encolar el pedido para el siguiente paso.
