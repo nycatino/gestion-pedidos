@@ -1,0 +1,99 @@
+Quiero que armes una presentación profesional y clara a partir del siguiente contenido. El público son estudiantes y docentes, por lo que debe ser sencilla, visual y bien organizada. Usá un diseño minimalista, con íconos o diagramas simples, y cada slide con poca carga de texto.
+
+Contenido a presentar
+
+Título de la presentación
+
+Relevamiento y Análisis – TP Gestión de Pedidos Online
+
+Slide 1 – Alcance del proyecto
+
+Sistema modular que gestiona todo el ciclo del pedido online.
+
+Desde la carga del pedido hasta la confirmación de envío.
+
+Cada módulo funciona de manera independiente.
+
+Suposiciones para simplificar:
+
+Medio de pago: solo tarjeta.
+
+Envío: únicamente a domicilio particular.
+
+No hay inventario digitalizado (stock simulado).
+
+Base de datos en memoria (sin persistencia real).
+
+Slide 2 – Módulo 1: Recepción del pedido
+
+Recibir pedido en formato JSON.
+
+Validar campos mínimos: cliente, productos, dirección, pago.
+
+Encolarlo para el siguiente paso.
+
+Slide 3 – Módulo 2: Verificación de disponibilidad
+
+Chequear stock simulado para cada producto.
+
+Reservar stock temporalmente.
+
+Si no hay stock, marcar faltante.
+
+Slide 4 – Módulo 3: Procesamiento de pago
+
+Medio de pago exclusivo: tarjeta.
+
+Simular autorización.
+
+Resultado: aprobado o rechazado.
+
+Slide 5 – Módulo 4: Preparación del pedido
+
+Generar picking list.
+
+Calcular tiempo estimado de preparación.
+
+Marcar como “Listo para envío”.
+
+Slide 6 – Módulo 5: Envío y seguimiento
+
+Generar guía de envío y número de seguimiento.
+
+Cambiar estado a “En tránsito”.
+
+Notificar al cliente.
+
+Slide 7 – Diseño general del sistema
+
+Flujo lineal: cada módulo procesa y pasa al siguiente.
+
+Base de datos y cola simuladas en memoria.
+
+Cada módulo devuelve un JSON con estado del pedido.
+
+Principales estados del pedido:
+
+RECIBIDO
+
+STOCK_RESERVADO
+
+PAGO_APROBADO / PAGO_RECHAZADO
+
+LISTO_PARA_ENVIO
+
+EN_TRANSITO
+
+FINALIZADO
+
+
+
+Instrucciones de estilo
+
+Usar un diseño limpio y moderno.
+
+Cada slide con un título claro y 3 a 5 bullets.
+
+Incluir íconos sencillos (ej.: carrito, tarjeta, caja, camión, check).
+
+Opcional: un diagrama de flujo simple para mostrar los módulos conectados.
