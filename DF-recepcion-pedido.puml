@@ -1,0 +1,22 @@
+@startuml
+left to right direction
+skinparam ArrowColor #555
+skinparam RectangleStyle rounded
+skinparam defaultFontName Arial
+
+rectangle "PedidoJSON" as IN
+rectangle "Recepcion del pedido" as PROC
+rectangle "Notificacion de estado\n(RECIBIDO / RECHAZADO)" as OUT
+
+database "Clientes" as DB_CLIENTES
+database "Pedidos" as DB_PEDIDOS
+database "Cola de pedidos\npendientes" as DB_PENDIENTES
+
+IN --> PROC
+PROC --> OUT
+
+' Persistencias
+PROC --> DB_CLIENTES
+PROC --> DB_PEDIDOS
+PROC --> DB_PENDIENTES
+@enduml

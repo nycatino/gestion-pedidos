@@ -18,21 +18,21 @@ Nivel 1
 5. 1 Retornar pedido.preparacion
 
 Nivel 2
-1.1.1 Hallar pedido
-1.2.1 Si verificar verficacion.status != OK o pedido.estado != PAGO_APROBADO
-    1.2.2 Retornar ERROR
-2.1.1 Declarar array picking_list
-2.1.2 Por cada item del pedido
-    2.1.3 Obtener ubicacion de item
-    2.1.4 Agregar al picking_list
-    3.1.1 Acumular tiempo estimado
-3.1.2 Acumular tiempo estimado empaquetado
-4.1.1 Actualizar pedido.preparacion
-4.2.1 Actualizar pedido.estado
-4.3.1 Actualizar pedido
-5.1.1 Retornar pedido.preparacion 
+1. 1.1 Hallar pedido
+1. 2.1 Si verificar verficacion.status != OK o pedido.estado != PAGO_APROBADO
+    1. 2.2 Retornar ERROR
+2. 1.1 Declarar array picking_list
+2. 1.2 Por cada item del pedido
+    2. 1.3 Obtener ubicacion de item
+    2. 1.4 Agregar al picking_list
+    3. 1.1 Acumular tiempo estimado
+3. 1.2 Acumular tiempo estimado empaquetado
+4. 1.1 Actualizar pedido.preparacion
+4. 2.1 Actualizar pedido.estado
+4. 3.1 Actualizar pedido
+5. 1.1 Retornar pedido.preparacion 
 
-Pseudocódigo
+```Pseudocódigo
 FUNCTION preparar_pedido(pedido_id):
 1.1.1    pedido = db_simulator.obtener_pedido(pedido_id)
 1.2.1    IF pedido.verificacion.status != 'OK' OR pedido.estado != 'PAGO_APROBADO':
@@ -49,3 +49,4 @@ FUNCTION preparar_pedido(pedido_id):
 4.2.1    pedido.estado = 'LISTO_PARA_ENVIO'
 4.3.1    db_simulator.actualizar_pedido(pedido)
 5.1.1    RETURN pedido.preparacion
+```
