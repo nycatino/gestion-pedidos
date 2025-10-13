@@ -3,7 +3,7 @@
 1. **Recibir pedido para verificar stock** (order\_id + lista de productos).
 2. **Revisar stock de cada SKU**.
 3. **Decidir**: reservar stock (si alcanza) o marcar faltantes/pendientes.
-4. **Registrar resultado** y **responder** al siguiente paso.
+4. **Responder al siguiente módulo** al siguiente paso.
 
 ---
 
@@ -24,12 +24,11 @@
    3.2 Si **ninguno** alcanza → **Sin reserva** y **listar faltantes**.
    3.3 Definir **tiempo de expiración** de la reserva (ej.: 30 minutos).
 
-4. **Registrar resultado y responder**
-   4.1 Guardar detalle: reservados, parciales, faltantes, expiración.
-   4.2 Actualizar **estado de disponibilidad** del pedido:
+4. **Responder al siguiente módulo**
+   4.1 Actualizar **estado de disponibilidad** del pedido:
    \- `AVAILABLE` (todo reservado)
    \- `OUT_OF_STOCK` (sin reserva)
-   4.3 Enviar **respuesta** al cliente si corresponde.
+   4.3 Enviar **respuesta** al siguiente módulo.
 
 ---
 
@@ -51,12 +50,13 @@
    3.2 Establecer `reserva_expira_en` (fecha/hora límite).
    3.3 Si no se logra reservar **nada** → estado `OUT_OF_STOCK`.
 
-4. **Registrar y responder**
-   4.1 Guardar `stock_check_result` con: `order_id`, `deposito`, `items_reservados`, `items_faltantes`, `expiracion`.
-   4.2 Determinar **estado**:
+4. **Responder al siguiente módulo**
+   4.1 Determinar **estado**:
    \- Todos reservados → `AVAILABLE`
    \- Nada reservado → `OUT_OF_STOCK`
-   4.3 Enviar resultado al siguiente paso (p. ej., **Verificación de pago** o **comunicar faltantes**).
+   4.2 Enviar resultado al siguiente paso 
+      4.2.1 Si estado == "AVAILABLE" responder a **Verificación de pago** 
+            Sino responder al cliente
 
 ---
 
@@ -76,49 +76,34 @@ ENTRADA: order_id, deposito?, items[{sku, cantidad}]
    PARA cada item EN items HACER
        disponible ← CONSULTAR_STOCK(item.sku, deposito)
 
-       SI disponible >= item.cantidad ENTONCES
-           AGREGAR {sku: item.sku, cantidad: item.cantidad} a resultado.reservados
-       SINO
+       SI disponible < item.cantidad ENTONCES
            AGREGAR {sku: item.sku, faltan: item.cantidad} a resultado.faltantes
        FIN SI
+
    FIN PARA
 
 3) DECIDIR Y RESERVAR
-   SI resultado.reservados está vacío ENTONCES
+
+   SI resultado.faltantes está vacío ENTONCES
+       estado_disponibilidad ← "AVAILABLE"
+       expiracion ← AHORA + 30 minutos
+       reserva_id ← CREAR_RESERVA(order_id, deposito, expiracion)
+   SINO
        estado_disponibilidad ← "OUT_OF_STOCK"
        reserva_id ← NULO
        expiracion ← NULO
-   SINO
-       reserva_id ← CREAR_RESERVA(order_id, deposito, resultado.reservados)
-       expiracion ← AHORA + 30 minutos
-       SI resultado.faltantes está vacío ENTONCES
-           estado_disponibilidad ← "AVAILABLE"
-       FIN SI
    FIN SI
+   estado ← estado_disponibilidad
 
-4) REGISTRAR RESULTADO
-   GUARDAR {
-       stock_check_id, order_id, deposito,
-       reservados: resultado.reservados,
-       faltantes: resultado.faltantes,
-       reserva_id, expiracion, estado: estado_disponibilidad
+4) RESPONDER AL SIGUIENTE MÓDULO
+   RESPUESTA ← {
+      order_id
    }
-
-5) RESPONDER / SALIDA
    SI estado_disponibilidad = "AVAILABLE" ENTONCES
-       RESPUESTA ← {
-           order_id, estado: "AVAILABLE",
-           reserva_id, expira: expiracion,
-           detalle_reserva: resultado.reservados
-       }
+      ENVIAR RESPUESTA A **Procesamiento de pago**
    SINO
-       RESPUESTA ← {
-           order_id, estado: "OUT_OF_STOCK",
-           faltantes: resultado.faltantes
-       }
+       NOTIFICAR AL CLIENTE
    FIN SI
-
-   ENVIAR RESPUESTA al siguiente proceso
 
 FIN VerificacionDisponibilidad
 ``

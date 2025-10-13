@@ -136,11 +136,11 @@ ENTRADA: order_id, pago{metodo, monto, datos?}
 
    SI estado_pago = "APROBADO" ENTONCES
        RESPUESTA ← { order_id, payment_id, estado: "APROBADO", auth_code, monto: pago.monto }
+       ENVIAR order_id A **Preparación de pedido**
    SINO
        RESPUESTA ← { order_id, payment_id, estado: "RECHAZADO", motivo }
+       RESPONDER A CLIENTE
    FIN SI
-
-   ENVIAR RESPUESTA al siguiente proceso
 
 FIN ProcesamientoPago
 ```
