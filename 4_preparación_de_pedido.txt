@@ -40,10 +40,21 @@ FUNCTION preparar_pedido(order_id):
 2.1.1    picking_list = []
 ???      tiempo_total = 0
 2.1.2    FOR item IN pedido.items:
-2.1.3        ubicacion = db_pedidos.obtener_ubicacion_sku(item.sku)
+2.1.3        ubicacion = db_inventario.obtener_ubicacion_sku(item.sku)
 2.1.4        picking_list.append({'sku': item.sku, 'cantidad': item.cantidad, 'ubicacion': ubicacion})
 3.1.1        tiempo_total += 2 * item.cantidad  # minutos por unidad
 3.1.2    tiempo_total += 5  # empaquetado
-4.1.1    pedido.estado = 'LISTO_PARA_ENVIAR'
-4.2.1    db_pedidos.actualizar_pedido(pedido)
-5.1.1    RETURN order_id **envío y seguimiento**
+        confirmacion = simular_confirmacion(picking_list)
+        SI confirmacion
+4.1.1       pedido.estado = 'LISTO_PARA_ENVIAR'
+4.2.1       db_pedidos.actualizar_pedido(pedido)
+5.1.1       ENVIAR order_id A **envío y seguimiento**
+        SINO
+            generar nota credito
+            responder al cliente
+            
+
+
+
+
+
