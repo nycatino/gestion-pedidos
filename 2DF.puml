@@ -1,20 +1,11 @@
 @startuml
 left to right direction
 
-rectangle "Entrada\nVerificacion de stock\n{order_id, deposito?, items[sku,cantidad]}" as IN
-rectangle "Modulo Verificacion de Stock\n(consultar stock, decidir, reservar)" as PROC
-rectangle "Salida\nEstado: DISPONIBLE / AGOTADO" as OUT1
-rectangle "Salida\nDetalle: reserva_id?, caducidad?, faltantes?" as OUT2
+rectangle "Proceso" as P
+rectangle "[DB] Base de datos" as DB
+rectangle "«cache» RAM/Cache" as CACHE
 
-rectangle "[DB] Inventario (por deposito)" as DB1
-rectangle "[DB] Pedidos (disponibilidad / logs)" as DB2
-rectangle "[DB] Reservas (holds temporales)" as DB3
+P --> DB : lee/escribe
+P --> CACHE : get/put
 
-IN --> PROC
-PROC --> OUT1
-PROC --> OUT2
-
-PROC --> DB1
-PROC --> DB2
-PROC --> DB3
 @enduml
