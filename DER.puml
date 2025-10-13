@@ -1,0 +1,21 @@
+@startuml
+title Estados del Pedido
+
+[*] --> RECIBIDO : pedido válido
+RECIBIDO --> RECHAZADO : validación fallida
+RECIBIDO --> STOCK_RESERVADO : disponibilidad OK (reserva 30m)
+STOCK_RESERVADO --> OUT_OF_STOCK : faltantes detectados
+STOCK_RESERVADO --> PAGO_APROBADO : pago aprobado
+STOCK_RESERVADO --> PAGO_RECHAZADO : pago rechazado / expira reserva
+
+PAGO_APROBADO --> LISTO_PARA_ENVIO : picking OK
+PAGO_APROBADO --> RECHAZADO : falta stock real / anulación
+
+LISTO_PARA_ENVIO --> EN_TRANSITO : guía creada, tracking_id
+EN_TRANSITO --> FINALIZADO : entrega confirmada
+PAGO_RECHAZADO --> RECHAZADO
+OUT_OF_STOCK --> RECHAZADO
+
+RECHAZADO --> [*]
+FINALIZADO --> [*]
+@enduml
