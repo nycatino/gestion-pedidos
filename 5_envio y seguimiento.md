@@ -53,14 +53,14 @@ Pseudocódigo
     FUNCTION procesar_envio(order_id, metodo_envio="estandar"):
 
     ### 1. Verificar estado del pedido ###
-    pedido = obtener_pedido(order_id)
+    pedido = db_pedidos.obtener_pedido(order_id)
 
     IF pedido.estado != "LISTO_PARA_ENVIO":
         RETURN ERROR "Pedido no listo para envío"
 
     ### 2. Generar guía de envío ###
-    carrier = seleccionar_carrier(metodo_envio)
-    tracking_id = generar_tracking()
+    carrier = seleccionar_carrier(metodo_envio) ## SIMULA LA CUMUNICACION CON EL CARRIER
+    tracking_id = carrier.tracking_id
 
     envio = {
         "order_id": order_id,
@@ -68,7 +68,7 @@ Pseudocódigo
         "carrier": carrier,
         "estado": "CREADO",
         "historial": [
-            { "estado": "CREADO", "ts": now() }
+            { "estado": "CREADO", "tiempo_salida": now() }
         ]
     }
     guardar_envio(envio)
@@ -80,7 +80,7 @@ Pseudocódigo
     guardar_pedido(pedido)
 
     ### 4. Notificar al cliente ###
-    enviar_notificacion(pedido.cliente, tracking_id, carrier)
-    registrar_notificacion(pedido.id, tracking_id, carrier)
+    RESPUESTA {pedido.cliente, tracking_id, carrier, pedido.estado}
+    RESPONDER AL CLIENTE
 
     RETURN envio

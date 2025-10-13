@@ -1,22 +1,58 @@
 @startuml
 left to right direction
-skinparam ArrowColor #555
-skinparam RectangleStyle rounded
-skinparam defaultFontName Arial
 
-rectangle "PedidoJSON" as IN
-rectangle "Recepcion del pedido" as PROC
-rectangle "Notificacion de estado\n(RECIBIDO / RECHAZADO)" as OUT
+' ==== Actores / Entradas / Notificaciones ====
+rectangle "Cliente" as CLI
+rectangle "Pedido/JSON" as IN_JSON
+rectangle "Notificación de estado\n(RECIBIDO / RECHAZADO)" as NOTI_RX
+rectangle "Notificación de estado\nRECHAZADO (sin stock)" as NOTI_SIN_STOCK
+rectangle "Solicitud verificación de pago\n{order_id}" as SOL_PAGO
+rectangle "Notificación de estado\n(APROBADO / RECHAZADO)" as NOTI_PAGO
 
-database "Clientes" as DB_CLIENTES
-database "Pedidos" as DB_PEDIDOS
-database "Cola de pedidos\npendientes" as DB_PENDIENTES
+' ==== Módulos ====
+rectangle "Recepción del pedido" as RX
+rectangle "Verificación de disponibilidad" as DISP
+rectangle "Consulta y reserva de stock" as RESERVA
+rectangle "Procesamiento de pago" as PAGO
 
-IN --> PROC
-PROC --> OUT
+' ==== Datos / Integraciones ====
+rectangle "[DB] Clientes" as DB_CLIENTES
+rectangle "[DB] Pedidos" as DB_PEDIDOS
+rectangle "[DB] Cola de pedidos pendientes" as DB_COLA
+rectangle "[DB] Inventario" as DB_INV
+rectangle "[DB] Pagos" as DB_PAGOS
+rectangle "[API] Banco" as API_BANK
 
-' Persistencias
-PROC --> DB_CLIENTES
-PROC --> DB_PEDIDOS
-PROC --> DB_PENDIENTES
+' ==== Flujo principal ====
+CLI --> IN_JSON
+IN_JSON --> RX
+RX --> NOTI_RX
+NOTI_RX --> CLI
+
+' Persistencias recepción
+RX --> DB_CLIENTES : actualizar/crear cliente
+RX --> DB_PEDIDOS  : guardar pedido (RECIBIDO/RECHAZADO)
+RX --> DB_COLA     : publicar {order_id} si RECIBIDO
+
+' A la verificación de stock
+RX --> DISP : "Solicitud de verificación {order_id}"
+DISP --> RESERVA
+RESERVA --> DB_INV : consultar/reservar
+
+' Resultado de stock
+DISP --> DB_COLA   : publicar {order_id} si continúa
+DISP --> DB_PEDIDOS: actualizar estado
+
+' Si NO hay stock -> notifica rechazo
+DISP --> NOTI_SIN_STOCK
+NOTI_SIN_STOCK --> CLI
+
+' Si hay stock -> ir a pago
+DISP --> SOL_PAGO
+SOL_PAGO --> PAGO
+PAGO --> API_BANK : aprobar/rechazar
+PAGO --> DB_PAGOS : registrar transacción
+PAGO --> DB_PEDIDOS : actualizar estado (PAGO_APROBADO/RECHAZADO)
+PAGO --> NOTI_PAGO
+NOTI_PAGO --> CLI
 @enduml

@@ -6,9 +6,9 @@ El sistema abarca el **ciclo completo de un pedido online**, desde que el client
 Se desarrollará en **módulos independientes**, conectados en secuencia, permitiendo simular cada parte.  
 
 **Suposiciones para simplificar**:
-- Medio de pago: **solo tarjeta**.  
+- Medio de pago: **solo tarjeta/transferencia**.  
 - Envío: únicamente **a domicilio particular**.  
-- No hay inventario digitalizado → se simulará stock básico.  
+- No hay inventario digitalizado → se simulará stock básico. #####################vVER 
 - Base de datos simulada en memoria (sin persistencia real).  
 
 ---
@@ -16,7 +16,7 @@ Se desarrollará en **módulos independientes**, conectados en secuencia, permit
 ## 2. Módulos y objetivos
 
 ### Módulo 1 – Recepción del pedido
-- **Objetivo**: recibir un pedido en formato JSON, validar que tenga los campos mínimos (cliente, productos, dirección, pago con tarjeta) y colocarlo en la cola para continuar.  
+- **Objetivo**: recibir un pedido en formato JSON, validar que tenga los campos mínimos (cliente, productos, dirección, metodo de pago) y colocarlo en la cola para continuar.  
 - **Alcance**: no valida stock ni pago; solo asegura que la entrada sea válida.  
 
 ### Módulo 2 – Verificación de disponibilidad
@@ -28,7 +28,7 @@ Se desarrollará en **módulos independientes**, conectados en secuencia, permit
 ### Módulo 3 – Procesamiento de pago
 - **Objetivo**: simular la autorización del pago con tarjeta.  
 - **Alcance**:  
-  - Validar que el medio de pago sea “tarjeta”.  
+  - Validar que el medio de pago sea “tarjeta/trasferencia”.  
   - Generar resultado de pago: “aprobado” o “rechazado”.  
   - Actualizar el estado del pedido en consecuencia.  
 
@@ -60,3 +60,4 @@ Se desarrollará en **módulos independientes**, conectados en secuencia, permit
   - LISTO_PARA_ENVIO  
   - EN_TRANSITO  
   - FINALIZADO  
+  - RECHAZADO

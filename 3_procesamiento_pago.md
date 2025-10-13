@@ -135,10 +135,10 @@ ENTRADA: order_id, pago{metodo, monto, datos?}
    GUARDAR { order_id, payment_id, estado_pago, auth_code, motivo, inicio_pago_at, fin_pago_at, monto: pago.monto }
 
    SI estado_pago = "APROBADO" ENTONCES
-       RESPUESTA ← { order_id, payment_id, estado: "APROBADO", auth_code, monto: pago.monto }
-       ENVIAR order_id A **Preparación de pedido**
+       RESPUESTA ← { order_id, payment_id, estado: "PAGO_APROBADO", auth_code, monto: pago.monto }
+       ENVIAR RESPUESTA A **Preparación de pedido**
    SINO
-       RESPUESTA ← { order_id, payment_id, estado: "RECHAZADO", motivo }
+       RESPUESTA ← { order_id, payment_id, estado: "PAGO_RECHAZADO", motivo }
        RESPONDER A CLIENTE
    FIN SI
 

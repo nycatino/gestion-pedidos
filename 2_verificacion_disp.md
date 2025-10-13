@@ -70,34 +70,36 @@ ENTRADA: order_id, deposito?, items[{sku, cantidad}]
 1) PREPARAR
    deposito ← deposito si viene, sino DEPOSITO_POR_DEFECTO
    stock_check_id ← GENERAR_ID()
-   resultado ← { reservados: [], faltantes: [] }
 
 2) REVISAR STOCK POR ITEM
    PARA cada item EN items HACER
        disponible ← CONSULTAR_STOCK(item.sku, deposito)
 
        SI disponible < item.cantidad ENTONCES
-           AGREGAR {sku: item.sku, faltan: item.cantidad} a resultado.faltantes
+          estado_disponibilidad ← "OUT_OF_STOCK"
+       SINO 
+         estado_disponibilidad = "AVAILABLE" 
        FIN SI
 
    FIN PARA
 
 3) DECIDIR Y RESERVAR
 
-   SI resultado.faltantes está vacío ENTONCES
-       estado_disponibilidad ← "AVAILABLE"
+   SI estado_disponibilidad == "AVAILABLE" ENTONCES
        expiracion ← AHORA + 30 minutos
        reserva_id ← CREAR_RESERVA(order_id, deposito, expiracion)
+       pedido.estado ← STOCK RESERVADO
    SINO
-       estado_disponibilidad ← "OUT_OF_STOCK"
        reserva_id ← NULO
        expiracion ← NULO
+       pedido.estado ← RECHAZADO
    FIN SI
-   estado ← estado_disponibilidad
+
+   
 
 4) RESPONDER AL SIGUIENTE MÓDULO
    RESPUESTA ← {
-      order_id
+      order_id, estado
    }
    SI estado_disponibilidad = "AVAILABLE" ENTONCES
       ENVIAR RESPUESTA A **Procesamiento de pago**

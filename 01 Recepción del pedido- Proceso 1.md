@@ -18,7 +18,7 @@ Este proceso es simplemente **recibir el pedido que envía el cliente en formato
 - **Dirección de envío**
     - O bien la dirección escrita, o un identificador guardado en el sistema.
 - **Forma de pago**
-    - Tarjeta.
+    - Tarjeta/Transferencia.
 
 
 
@@ -30,7 +30,7 @@ Este proceso es simplemente **recibir el pedido que envía el cliente en formato
 1. **Recibir pedido** (llega en JSON).
 2. **Revisar campos obligatorios**.
 3. **Encolar** para el siguiente proceso.
-4. **Responder** al cliente con la confirmación.
+4. **Responder** al cliente con la confirmación/rechazo.
 
 ---
 ## Nivel 2 (Refinamiento de cada paso)
@@ -44,17 +44,16 @@ Este proceso es simplemente **recibir el pedido que envía el cliente en formato
     
 2. **Chequear contenido**  
 	2.1 Por cada campo obligatorio Revisar 
-		2.2 **Si falta algo → Rechazar e informar**  
-		2.3 **Si está completo → Armar pedido y guardar**  
+		2.2 **Si falta algo → Rechazar, informar y guardar**  
+		2.3 **Si está completo → Armar pedido**  
 
 3. **Encolar**  
     3.1 Preparo un **mensaje simple** con `order_id`.  
     3.2 Lo pongo en la **cola de pedidos pendientes**.  
     
 4. **Responder al cliente**  
-    4.1 Armo un **mensaje de confirmación/rechazo**.  
-    4.2 Incluyo **estado actual**.  
-    4.3 **Envió** la respuesta.
+    4.1 Armo un **respuesta de confirmación/rechazo**.  .  
+    4.2 **Envió** la respuesta.
     
 
 ---
@@ -81,13 +80,13 @@ Este proceso es simplemente **recibir el pedido que envía el cliente en formato
 	2.2. **Si falta algo → Rechazar e informar**  
 		2.2.1 Armo la **lista de errores** (qué falta o qué está mal).  
 		2.2.2 Marco el pedido como **rechazado** (no lo encolo).  
-		2.2.3 **Saltar al paso 4**.
+		2.2.3 **Guardo** el registro
+        2.2.4 **Saltar al paso 4**.
 	
 	2.3. **Si está completo → Armar pedido y guardar**  
 	    2.3.1 Genero un **número de pedido (order_id)** único.  
 	    2.3.2 Armo un **registro básico** con cliente, productos, dirección y pago.  
 	    2.3.3 Pongo **estado = “RECIBIDO”**.  
-	    2.3.4 **Guardo** el registro junto con el código de seguimiento.
     
 3. **Encolar**  
     3.1 Preparo un **mensaje simple** con `order_id`.  
@@ -98,9 +97,8 @@ Este proceso es simplemente **recibir el pedido que envía el cliente en formato
 	    Si el pedido esta marcado como recibido
 		    4.1.1 Mensaje **éxito**: “Pedido recibido”, incluir `order_id`
 		si no
-		    4.1.2 Mensaje **error** (si vino desde Paso 2.2.2): “Pedido rechazado”, incluir **lista de errores**.
-    4.2 Incluyo **estado actual**.  
-    4.3 **Envió** la respuesta.
+		    4.1.2 Mensaje **error** (si vino desde Paso 2.2.2): “Pedido rechazado”, incluir **lista de errores**. 
+    4.2 **Envió** la respuesta.
 
 # Pseudocódigo – Recepción de Pedido
 
@@ -157,13 +155,13 @@ INICIO RecepcionPedido
 
    SI ERRORES no está vacío ENTONCES
        ESTADO ← "RECHAZADO"
+       GUARDAR registro
        IR A Paso 4 (Responder con error)
    SINO
 	   CREAR Pedido
        order_id ← GENERAR nuevo número único
        Asignar registros con datos del objeto_JSON
-       ESTADO ← "RECIBIDO"
-       GUARDAR registro
+       ESTADO ← "RECIBIDO"  
    FIN SI
 
 3) ENCOLAR pedido
