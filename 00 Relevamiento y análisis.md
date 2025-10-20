@@ -33,9 +33,10 @@ Se desarrollará en **módulos independientes**, conectados en secuencia, permit
   - Actualizar el estado del pedido en consecuencia.  
 
 ### Módulo 4 – Preparación del pedido
-- **Objetivo**: organizar el picking list y calcular un tiempo estimado de preparación.  
+- **Objetivo**: organizar el *picking list*, confirmar preparación y calcular un tiempo estimado de preparación.  
 - **Alcance**:  
   - Generar lista de productos con sus ubicaciones simuladas.  
+  - Confirmar que el pedido fue preparado.  
   - Calcular tiempo estimado (por ítem + empaquetado).  
   - Marcar pedido como **“listo para envío”**.  
 
