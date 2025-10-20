@@ -1,0 +1,109 @@
+@startuml
+title Verificación de Disponibilidad y Reserva de Stock (Nivel 1–3)
+
+skinparam activity {
+  BackgroundColor White
+  BorderColor #444
+  ArrowColor #444
+  DiamondBackgroundColor #eef6ff
+  DiamondBorderColor #4a90e2
+  StartColor #4a90e2
+  EndColor #4a90e2
+}
+skinparam shadowing false
+skinparam dpi 180
+
+' ============================================================
+' Swimlanes
+' ============================================================
+|Cliente / Módulo Anterior|
+start
+:Recibir solicitud de verificación de stock
+( order_id, deposito?, items[{sku, cantidad}] );
+
+|Stock Checker (Servicio)|
+:Generar stock_check_id;
+if (¿Viene "deposito"? ) then (Sí)
+  :Usar deposito recibido;
+else (No)
+  :Usar DEPOSITO_POR_DEFECTO;
+endif
+
+' ------------------------------------------------------------
+' Inicializaciones
+' ------------------------------------------------------------
+:set all_ok = true;
+:set any_ok = false;
+:set faltantes = [] (lista);
+:Registrar contexto (order_id, deposito, stock_check_id);
+
+' ------------------------------------------------------------
+' Bucle por ítems
+' ------------------------------------------------------------
+repeat
+  :Tomar siguiente item {sku, cantidad};
+  |Inventario / Stock API|
+  :disponible = CONSULTAR_STOCK(sku, deposito);
+  |Stock Checker (Servicio)|
+  if (disponible >= cantidad ?) then (Sí)
+    :Marcar ítem OK;
+    :any_ok = true;
+  else (No)
+    :Registrar faltante {sku, req = cantidad, disp = disponible};
+    :all_ok = false;
+  endif
+repeat while (quedan ítems?) is (Sí)
+-> No;
+
+' ------------------------------------------------------------
+' Decidir y Reservar
+' ------------------------------------------------------------
+if (all_ok == true ?) then (Todos OK)
+  |Reserva / Hold API|
+  :expiracion = AHORA + 30 min;
+  :reserva_id = CREAR_RESERVA(order_id,\ndeposito, items, expiracion);
+  |Stock Checker (Servicio)|
+  :estado = "AVAILABLE";
+  :pedido.estado = "STOCK_RESERVADO";
+elseif (any_ok == false) then (Ninguno OK)
+  :reserva_id = null;
+  :expiracion = null;
+  :estado = "OUT_OF_STOCK";
+  :pedido.estado = "RECHAZADO";
+else (Parcial OK)
+  ' Política actual: no se hace reserva parcial
+  :reserva_id = null;
+  :expiracion = null;
+  :estado = "OUT_OF_STOCK";
+  :pedido.estado = "RECHAZADO";
+  note right
+    Se detectaron faltantes parciales.
+    Política: no reservar parcialmente.
+    (Se retorna detalle en la respuesta)
+  end note
+endif
+
+' ------------------------------------------------------------
+' Construir respuesta al siguiente módulo
+' ------------------------------------------------------------
+:Armar payload de salida:
+{
+  stock_check_id,
+  order_id,
+  deposito,
+  estado,               ' AVAILABLE | OUT_OF_STOCK
+  reserva_id?,          ' si AVAILABLE
+  expiracion?,          ' si AVAILABLE
+  faltantes[]           ' si OUT_OF_STOCK
+};
+
+|Encaminamiento|
+if (estado == "AVAILABLE" ?) then (Sí)
+  :Enviar a **Procesamiento de pago**;
+else (No)
+  :Notificar al cliente (faltantes / sin stock);
+endif
+
+|Cliente / Módulo Anterior|
+stop
+@enduml
