@@ -49,7 +49,7 @@
 ► 2.1 Consultar `stock_disponible(sku, deposito)`.
 ► 2.2 Comparar `stock_disponible` vs `cantidad`:
 ✦ 2.2.1 Si `disponible >= cantidad` → marcar **OK** para ese ítem.
-✦ 2.2.2 Si `disponible == 0` → marcar **SIN STOCK**.
+✦ 2.2.2 Si `disponible < cantidad` → marcar **SIN STOCK**.
 
 ### 3) Decidir y reservar
 
