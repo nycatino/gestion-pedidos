@@ -1,26 +1,7 @@
-from dataclasses import dataclass
 from datetime import datetime
 import random
-from typing import Dict, Optional, Callable, Any, Union, List
-from modelos.pedido import Pedido
-
-# --- Datos de ejemplo (pueden compartirse entre módulos) ---
-
-@dataclass
-class Item:
-    sku: str
-    cantidad: int
-
-@dataclass
-class Pedido:
-    id: str
-    cliente: str
-    estado: str
-    items: List[Item]
-    tiempo_estimado_preparacion: Optional[int] = None
-
-
-# --- Módulo de preparación del pedido ---
+from typing import Dict, Optional, Callable, Any, Union
+from modelos.pedido import Pedido, Item  # ✅ usamos el modelo compartido
 
 class ModuloPreparacion:
     def __init__(self, pedidos_source: Union[Dict[str, Pedido], Callable[[str], Optional[Pedido]]] = None):
@@ -30,6 +11,9 @@ class ModuloPreparacion:
          - una función getter(order_id) -> Pedido | None
         """
         self._internal_pedidos: Dict[str, Pedido] = {}
+        self.preparaciones: Dict[str, Any] = {}
+
+        # Normalizamos la fuente de pedidos
         if pedidos_source is None:
             self._getter: Callable[[str], Optional[Pedido]] = lambda oid: self._internal_pedidos.get(oid)
         elif isinstance(pedidos_source, dict):
@@ -39,8 +23,6 @@ class ModuloPreparacion:
         else:
             raise ValueError("pedidos_source debe ser dict, callable o None")
 
-        self.preparaciones = {}  # Simula base de datos de preparaciones
-
     # --- Función auxiliar ---
     def simular_ubicacion(self, sku: str) -> str:
         """Devuelve una ubicación ficticia del depósito para el SKU"""
@@ -49,11 +31,9 @@ class ModuloPreparacion:
         nivel = random.choice(["A", "B", "C"])
         return f"P{pasillo}-E{estante}-{nivel}"
 
-    # --- Confirmación ficticia ---
     def confirmar_preparacion(self, picking_list: list) -> bool:
         """Simula una confirmación del operario o sistema"""
-        # En un caso real, esto podría ser una API, aquí siempre True
-        return True
+        return True  # Siempre confirmada (en entorno real podría fallar)
 
     # --- Lógica principal ---
     def preparar_pedido(self, order_id: str) -> Dict[str, Any]:
@@ -88,16 +68,18 @@ class ModuloPreparacion:
         tiempo_empaquetado = 5
         tiempo_total = (len(pedido.items) * tiempo_por_item) + tiempo_empaquetado
 
-        # Actualizar pedido
+        # Actualizar estado del pedido
         pedido.estado = "LISTO_PARA_ENVIO"
         pedido.tiempo_estimado_preparacion = tiempo_total
+
+        # Guardar en base de preparaciones simulada
         self.preparaciones[order_id] = {
             "picking_list": picking_list,
             "tiempo_estimado": tiempo_total,
             "fecha_preparacion": datetime.now().isoformat()
         }
 
-        # Retornar resultado (para pasar a módulo de envíos)
+        # Retornar resultado
         return {
             "order_id": pedido.id,
             "estado": pedido.estado,
@@ -105,10 +87,8 @@ class ModuloPreparacion:
             "picking_list": picking_list
         }
 
-
-# --- Prueba rápida del módulo ---
+# --- Prueba local ---
 def test_modulo_preparacion():
-    # Base de pedidos compartida
     pedidos_store: Dict[str, Pedido] = {
         "ORDER-101": Pedido(
             id="ORDER-101",
@@ -119,7 +99,6 @@ def test_modulo_preparacion():
     }
 
     modulo = ModuloPreparacion(pedidos_source=pedidos_store)
-
     resultado = modulo.preparar_pedido("ORDER-101")
 
     print("\n=== Resultado de preparación ===")
