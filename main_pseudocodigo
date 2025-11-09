@@ -1,0 +1,40 @@
+INICIO MAIN
+
+1. CREAR instancia de PedidoStore
+
+2. CREAR módulos:
+      - recepcion = ModuloRecepcion(pedidos_store)
+      - disponibilidad = ModuloDisponibilidad(pedidos_store)
+      - pago = ModuloPago(pedidos_store)
+      - envios = ModuloEnvios(pedidos_store)
+      - preparacion = ModuloPreparacion(pedidos_store, envios)
+
+3. RECIBIR pedido JSON desde cliente:
+      ejemplo_json = {
+           "cliente": "Juan Pérez",
+           "productos": [
+                {"sku": "SKU001", "nombre": "Teclado", "cantidad": 1, "precio": 15000},
+                {"sku": "SKU002", "nombre": "Mouse", "cantidad": 2, "precio": 8000}
+           ]
+      }
+
+      resultado = recepcion.recibir_pedido(json_string)
+
+4. SI resultado.estado == "RECIBIDO":
+      order_id ← resultado.order_id
+      disponibilidad.verificar_stock(order_id)
+
+5. SI stock disponible:
+      pago.procesar_pago(order_id, metodo="tarjeta", monto=total, datos=tarjeta)
+
+6. SI pago aprobado:
+      preparacion.preparar_pedido(order_id)
+
+7. Al finalizar preparación:
+      el módulo de envíos se ejecuta automáticamente → genera guía y cambia estado a “ENVIADO”.
+
+8. MOSTRAR estado final del pedido:
+      pedido = pedidos_store.obtener_pedido(order_id)
+      IMPRIMIR pedido
+
+FIN

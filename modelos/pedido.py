@@ -7,3 +7,11 @@ class Pedido:
 
     def __repr__(self):
         return f"<Pedido {self.id} - {self.estado}>"
+
+class Item:
+    def __init__(self, sku, cantidad):
+        self.sku = sku
+        self.cantidad = cantidad
+
+    def __repr__(self):
+        return f"<Item {self.sku} x {self.cantidad}>"
