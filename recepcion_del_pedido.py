@@ -1,6 +1,8 @@
 import json
 from datetime import datetime
-from pedidos_store import Pedido, Producto
+from pedidos_storebdd import Pedido, Producto
+from modelos.pedido import Pedido
+
 
 class ModuloRecepcion:
     def __init__(self, pedidos_store):

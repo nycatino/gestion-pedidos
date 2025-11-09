@@ -1,5 +1,7 @@
 from datetime import datetime
 import uuid
+from modelos.pedido import Pedido
+
 
 class ModuloPago:
     def __init__(self, pedidos_store):

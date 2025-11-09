@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import random
 from typing import Dict, Optional, Callable, Any, Union, List
+from modelos.pedido import Pedido
 
 # --- Datos de ejemplo (pueden compartirse entre módulos) ---
 

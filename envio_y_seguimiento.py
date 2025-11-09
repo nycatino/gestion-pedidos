@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 import uuid
 from typing import Dict, Optional, Callable, Any, Union
+from modelos.pedido import Pedido
 
 @dataclass
 class Pedido:
