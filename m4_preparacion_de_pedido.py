@@ -1,105 +1,104 @@
 from datetime import datetime
 import random
 from typing import Dict, Optional, Callable, Any, Union
-from modelos.pedido import Pedido, Item  # ✅ usamos el modelo compartido
+from modelos.pedido import Pedido, Producto  # ✅ usamos el modelo compartido
 
 class ModuloPreparacion:
-    def __init__(self, pedidos_source: Union[Dict[str, Pedido], Callable[[str], Optional[Pedido]]] = None):
+    def __init__(self, productos):
         """
         pedidos_source puede ser:
          - un dict que mapea order_id -> Pedido
          - una función getter(order_id) -> Pedido | None
         """
-        self._internal_pedidos: Dict[str, Pedido] = {}
+        self.productos = productos
         self.preparaciones: Dict[str, Any] = {}
 
-        # Normalizamos la fuente de pedidos
-        if pedidos_source is None:
-            self._getter: Callable[[str], Optional[Pedido]] = lambda oid: self._internal_pedidos.get(oid)
-        elif isinstance(pedidos_source, dict):
-            self._getter = lambda oid, _d=pedidos_source: _d.get(oid)
-        elif callable(pedidos_source):
-            self._getter = pedidos_source
-        else:
-            raise ValueError("pedidos_source debe ser dict, callable o None")
-
     # --- Función auxiliar ---
-    def simular_ubicacion(self, sku: str) -> str:
+    def simular_ubicacion(self, sku: str) :
         """Devuelve una ubicación ficticia del depósito para el SKU"""
         pasillo = random.randint(1, 10)
         estante = random.randint(1, 5)
         nivel = random.choice(["A", "B", "C"])
         return f"P{pasillo}-E{estante}-{nivel}"
 
-    def confirmar_preparacion(self, picking_list: list) -> bool:
-        """Simula una confirmación del operario o sistema"""
-        return True  # Siempre confirmada (en entorno real podría fallar)
+    def confirmar_preparacion(self, picking_list, tiempo_estimado_preparacion):
+        print(f"Picking list: {picking_list}")
+        print(f"Tiempo estimado de preparación: {tiempo_estimado_preparacion} minutos")
+
+        while True:
+            respuesta = input("¿Confirmar preparación? (s = sí / n = no / r = rechazar pedido): ").lower().strip()
+
+            if respuesta == 's':
+                print("Preparación confirmada ✅")
+                return True
+            elif respuesta == 'n':
+                print("Preparación no confirmada ❌")
+                # vuelve a preguntar automáticamente
+                continue
+            elif respuesta == 'r':
+                print("Pedido rechazado 🚫")
+                return "rechazado"
+            else:
+                print("Opción inválida. Por favor ingrese 's', 'n' o 'r'.")
+
 
     # --- Lógica principal ---
-    def preparar_pedido(self, order_id: str) -> Dict[str, Any]:
-        pedido = self._getter(order_id)
-        if not pedido:
-            return {"error": "Pedido no encontrado", "order_id": order_id}
+    def preparar_pedido(self, productos):
+        productos = self.productos
+        # if not pedido:
+        #     return {"error": "Pedido no encontrado", "order_id": order_id}
 
-        if pedido.estado != "PAGO_APROBADO":
-            return {
-                "error": "Precondición no cumplida",
-                "order_id": order_id,
-                "estado_actual": pedido.estado
-            }
+        # if pedido.estado != "PAGO_APROBADO":
+        #     return {
+        #         "error": "Precondición no cumplida",
+        #         "order_id": order_id,
+        #         "estado_actual": pedido.estado
+        #     }
 
         # Generar picking list
         picking_list = []
-        for item in pedido.items:
-            ubicacion = self.simular_ubicacion(item.sku)
+        for producto in productos:
+            ubicacion = self.simular_ubicacion(producto.sku)
             picking_list.append({
-                "sku": item.sku,
-                "cantidad": item.cantidad,
+                "sku": producto.sku,
+                "cantidad": producto.cantidad_solicitada,
                 "ubicacion": ubicacion
             })
-
-        # Confirmar preparación
-        confirmado = self.confirmar_preparacion(picking_list)
-        if not confirmado:
-            return {"error": "Preparación no confirmada", "order_id": order_id}
 
         # Calcular tiempos estimados
         tiempo_por_item = 2  # minutos
         tiempo_empaquetado = 5
-        tiempo_total = (len(pedido.items) * tiempo_por_item) + tiempo_empaquetado
+        tiempo_estimado_preparacion = (len(productos) * tiempo_por_item) + tiempo_empaquetado
 
-        # Actualizar estado del pedido
-        pedido.estado = "LISTO_PARA_ENVIO"
-        pedido.tiempo_estimado_preparacion = tiempo_total
+        # ---- ARREGLAR Confirmar preparación (pregunto en loop hasta que se confirme o se rechace el pedido)
+        confirmado = self.confirmar_preparacion(picking_list, tiempo_estimado_preparacion)
+        if confirmado == "rechazado":
+            return {"estado": "RECHAZADO"}
 
-        # Guardar en base de preparaciones simulada
-        self.preparaciones[order_id] = {
-            "picking_list": picking_list,
-            "tiempo_estimado": tiempo_total,
-            "fecha_preparacion": datetime.now().isoformat()
-        }
+        
+
+        # ------- MAIN  Actualizar estado del pedido
+        estado = "LISTO_PARA_ENVIO"
+
+        # # Guardar en base de preparaciones simulada
+        # self.preparaciones[order_id] = {
+        #     "picking_list": picking_list,
+        #     "tiempo_estimado": tiempo_total,
+        #     "fecha_preparacion": datetime.now().isoformat()
+        # }
 
         # Retornar resultado
         return {
-            "order_id": pedido.id,
-            "estado": pedido.estado,
-            "tiempo_estimado": tiempo_total,
-            "picking_list": picking_list
+            "estado": estado,
+            "tiempo_estimado": tiempo_estimado_preparacion,
         }
 
 # --- Prueba local ---
 def test_modulo_preparacion():
-    pedidos_store: Dict[str, Pedido] = {
-        "ORDER-101": Pedido(
-            id="ORDER-101",
-            cliente="Juan Pérez",
-            estado="PAGO_APROBADO",
-            items=[Item("SKU123", 2), Item("SKU456", 1)]
-        )
-    }
+    productos =[Producto("SKU123", 2, 3000), Producto("SKU456", 1, 4000)]
 
-    modulo = ModuloPreparacion(pedidos_source=pedidos_store)
-    resultado = modulo.preparar_pedido("ORDER-101")
+    modulo = ModuloPreparacion(productos = productos)
+    resultado = modulo.preparar_pedido(productos)
 
     print("\n=== Resultado de preparación ===")
     for k, v in resultado.items():
