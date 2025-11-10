@@ -11,7 +11,6 @@ class Verificacion_disponibilidad_producto:
         self.disponibilidad_total = True
         self.consulta_disponibilidad_productos = []
         self.stock_reservado = []
-        self.berna = 10
 
     def consultar_stock(self):
         

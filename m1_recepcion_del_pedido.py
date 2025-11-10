@@ -1,61 +1,68 @@
 import json
+import uuid
 from datetime import datetime
-from pedidos_storebdd import Pedido, Producto
-from modelos.pedido import Pedido
+from typing import Dict, Any, Union, Callable, Optional, List
+from modelos.pedido import Pedido, Item
 
 
 class ModuloRecepcion:
-    def __init__(self, pedidos_store):
-        self.pedidos_store = pedidos_store
+    def __init__(self, pedidos_source):
+       
+       self.data = json.loads(pedidos_source)
+       self.errores = [] 
 
-    def recibir_pedido(self, pedido_json: str):
-        errores = []
+    def validar_pedido(self):
+        """ valida los campos """
         try:
-            data = json.loads(pedido_json)
+            data = json.loads(self.pedido_json)
         except json.JSONDecodeError:
             return {"estado": "RECHAZADO", "errores": ["JSON inválido"]}
 
-        # Validaciones básicas
+        # --- Validaciones básicas ---
         if not data.get("cliente"):
-            errores.append("Falta nombre del cliente")
+            self.errores.append("Falta nombre del cliente")
         if not data.get("email"):
-            errores.append("Falta email del cliente")
+            self.errores.append("Falta email del cliente")
         if not data.get("direccion_envio"):
-            errores.append("Falta dirección de envío")
+            self.errores.append("Falta dirección de envío")
         if not data.get("productos"):
-            errores.append("Falta lista de productos")
+            self.errores.append("Falta lista de productos")
 
-        if errores:
-            return {"estado": "RECHAZADO", "errores": errores}
+        if self.errores:
+            return {"estado": "RECHAZADO", "errores": self.errores}
 
-        # Crear objetos Producto
+        #FALTA VER BIEN EL RETORNO DE ESTA FUNCION
+
+    def crear_pedido(self):
+        # --- Crear objetos Item ---
         productos = []
-        for p in data["productos"]:
+        
+        # CREAMOS LISTA DE PRODUCTOS
+        for producto in self.data["productos"]:
             try:
-                prod = Producto(
-                    sku=p["sku"],
-                    nombre=p.get("nombre", "Desconocido"),
-                    cantidad=int(p["cantidad"]),
-                    precio=float(p["precio"])
-                )
-                productos.append(prod)
-            except Exception:
-                errores.append(f"Producto inválido: {p}")
+                sku = productos["sku"]
+                cantidad_solicitada = int(producto["cantidad_solicitada"])
+                precio = int(producto["precio"]),
+                productos.append(Item(sku=sku, cantidad_solicitada=cantidad_solicitada))
+                
+            except Exception as e:
+                self.errores.append(f"Producto inválido: {producto} ({e})")
 
-        if errores:
-            return {"estado": "RECHAZADO", "errores": errores}
+        if self.errores:
+            #FALTA PERSISTIR
+            return {"estado": "RECHAZADO", "errores": self.errores}
 
-        total = sum(p.precio * p.cantidad for p in productos)
-        pedido = Pedido(
-            id=self.pedidos_store.generar_id(),
-            cliente=data["cliente"],
-            email=data["email"],
-            direccion_envio=data["direccion_envio"],
+        # --- Generar orden de pedido ---
+        order_id = f"ORDER-{str(uuid.uuid4())[:8]}"
+        orden_pedido = Pedido(
+            id = order_id,
+            cliente = self.data["cliente"],
+            fecha_recepcion = datetime.now(),
+            estado="RECIBIDO",
             productos=productos,
-            total=total,
-            estado="RECIBIDO"
+            medio_de_pago = self.medio_de_pago,
+            pedido_persistido = False
         )
 
-        self.pedidos_store.guardar_pedido(pedido)
-
-        return {"estado": "RECIBIDO", "order_id": pedido.id, "total": total}
+        return {orden_pedido}
+    
