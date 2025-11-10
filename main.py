@@ -3,6 +3,8 @@ from m0_compras import seleccionar_productos
 from m1_recepcion_del_pedido import RecepcionPedido
 from m2_verificacion_disponibilidad import Verificacion_disponibilidad_producto, Deposito
 from m3_procesamiento_de_pago import ModuloPago, Api_banco
+from m4_preparacion_de_pedido import ModuloPreparacion
+from m5_envio_y_seguimiento import ModuloEnvios
 from modelos.pedido import Pedido, Producto
 
 ##CREAMOS LOS PRODCUTOS DISPONIBLES
@@ -69,3 +71,22 @@ if __name__ == "__main__":
         print("rechazo por problemas con el pago")
 
     
+
+
+
+
+
+
+
+
+    ModuloPreparacion = ModuloPreparacion() 
+    preparacion_pedido = ModuloPreparacion.preparar_pedido(orden_pedido)
+
+    if preparacion_pedido:
+        print("PEDIDO PREPARADO")
+    #modulo 5
+        ModuloEnvios = ModuloEnvios()
+        seguimiento = ModuloEnvios.procesar_envio(orden_pedido)
+    else:
+        print("PEDIDO RECHAZADO")
+

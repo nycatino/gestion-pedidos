@@ -25,23 +25,23 @@ class ModuloPreparacion:
             respuesta = input("¿Confirmar preparación? (s = sí / n = no / r = rechazar pedido): ").lower().strip()
 
             if respuesta == 's':
-                print("Preparación confirmada ✅")
+                print("Preparación confirmada")
                 return True
             elif respuesta == 'n':
-                print("Preparación no confirmada ❌")
+                print("Preparación no confirmada")
                 # vuelve a preguntar automáticamente
                 continue
             elif respuesta == 'r':
-                print("Pedido rechazado 🚫")
+                print("Pedido rechazado")
                 return "rechazado"
             else:
                 print("Opción inválida. Por favor ingrese 's', 'n' o 'r'.")
 
 
     # --- Lógica principal ---
-    def preparar_pedido(self, productos, order_id):
+    def preparar_pedido(self, orden_pedido):
 
-        productos = productos
+        productos = orden_pedido.productos
         # if not pedido:
         #     return {"error": "Pedido no encontrado", "order_id": order_id}
 
@@ -70,14 +70,14 @@ class ModuloPreparacion:
         # ---- ARREGLAR Confirmar preparación (pregunto en loop hasta que se confirme o se rechace el pedido)
         confirmado = self.confirmar_preparacion(picking_list, tiempo_estimado_preparacion)
         if confirmado == "rechazado":
-            self.errores.append("No se pudo confirma la preparacion")
+            self.errores.append("No se pudo confirmar la preparacion")
             return False
 
         # ------- MAIN  Actualizar estado del pedido
         estado = "LISTO_PARA_ENVIO"
 
         # Guardar en base de preparaciones simulada
-        self.preparaciones[order_id] = {
+        self.preparaciones[orden_pedido.id] = {
             "picking_list": picking_list,
             "tiempo_estimado": tiempo_estimado_preparacion,
             "fecha_preparacion": datetime.now().isoformat()
@@ -91,10 +91,11 @@ class ModuloPreparacion:
 
 # --- Prueba local ---
 def test_modulo_preparacion():
-    productos =[Producto("SKU123", 2, 3000), Producto("SKU456", 1, 4000)]
+    
+    pedido = Pedido(id="ORDER-001", cliente="Ana Gómez", estado="LISTO_PARA_ENVIO", productos =[Producto("SKU123", 2, 3000), Producto("SKU456", 1, 4000)])
 
     modulo = ModuloPreparacion()
-    resultado = modulo.preparar_pedido(productos)
+    resultado = modulo.preparar_pedido(pedido)
 
     print("\n=== Resultado de preparación ===")
     for k, v in resultado.items():

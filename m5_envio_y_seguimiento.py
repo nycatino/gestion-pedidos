@@ -38,13 +38,13 @@ class ModuloEnvios:
     #     })
     #     return mensaje
 
-    def procesar_envio(self, estado, order_id, metodo_envio: str = "estandar"):
+    def procesar_envio(self, orden_pedido):
 
-        carrier = self.seleccionar_carrier(metodo_envio)
+        carrier = self.seleccionar_carrier(orden_pedido.metodo_envio)
         tracking_id = self.generar_tracking()
 
         envio = Envio(
-            order_id=order_id,
+            order_id=orden_pedido.id,
             tracking_id=tracking_id,
             carrier=carrier,
             estado="CREADO",
@@ -76,7 +76,7 @@ def test_modulo_con_store_externa():
     pedido = Pedido(id="ORDER-001", cliente="Ana Gómez", estado="LISTO_PARA_ENVIO")
 
     modulo = ModuloEnvios()
-    resultado = modulo.procesar_envio("LISTO_PARA_ENVIO", pedido.id, "estandar")
+    resultado = modulo.procesar_envio(pedido)
 
     print("\n=== Resultado del envío (store externa) ===")
     for k, v in resultado.items():

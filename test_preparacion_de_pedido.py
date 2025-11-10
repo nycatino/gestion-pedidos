@@ -1,14 +1,14 @@
 from datetime import datetime
-from m4_preparacion_de_pedido import ModuloPreparacion
-from modelos.pedido import Producto
 import builtins
+from m4_preparacion_de_pedido import ModuloPreparacion
+from modelos.pedido import Pedido, Producto
 
 
 def test_preparar_pedido_confirmado():
     """Simula confirmar preparación con 's'"""
     mod = ModuloPreparacion()
 
-    # Guardamos el input original y lo reemplazamos temporalmente
+    # Simulamos que el usuario confirma con 's'
     original_input = builtins.input
     builtins.input = lambda _: "s"
 
@@ -17,10 +17,11 @@ def test_preparar_pedido_confirmado():
         Producto("SKU456", 1, 4000)
     ]
 
-    resultado = mod.preparar_pedido(productos, order_id="ORD001")
+    pedido = Pedido(id="ORD001", cliente="Juan Pérez", estado="PAGO_APROBADO", productos=productos)
 
-    # Restauramos el input original
-    builtins.input = original_input
+    resultado = mod.preparar_pedido(pedido)
+
+    builtins.input = original_input  # restaurar input
 
     assert resultado["estado"] == "LISTO_PARA_ENVIO"
     assert "tiempo_estimado" in resultado
@@ -37,8 +38,9 @@ def test_preparar_pedido_rechazado():
     builtins.input = lambda _: "r"
 
     productos = [Producto("SKU789", 3, 5000)]
+    pedido = Pedido(id="ORD002", cliente="Laura", estado="PAGO_APROBADO", productos=productos)
 
-    resultado = mod.preparar_pedido(productos, order_id="ORD002")
+    resultado = mod.preparar_pedido(pedido)
 
     builtins.input = original_input
 
@@ -56,8 +58,9 @@ def test_preparar_pedido_repite_y_confirma():
     builtins.input = lambda _: next(respuestas)
 
     productos = [Producto("SKU999", 1, 2000)]
+    pedido = Pedido(id="ORD003", cliente="Carlos", estado="PAGO_APROBADO", productos=productos)
 
-    resultado = mod.preparar_pedido(productos, order_id="ORD003")
+    resultado = mod.preparar_pedido(pedido)
 
     builtins.input = original_input
 
@@ -81,4 +84,4 @@ if __name__ == "__main__":
     test_preparar_pedido_rechazado()
     test_preparar_pedido_repite_y_confirma()
     test_simular_ubicacion_formato()
-    print("✅ Todos los tests de preparación pasaron correctamente.")
+    print("Todos los tests de preparación pasaron correctamente.")
