@@ -2,7 +2,7 @@ import random
 
 
 class Pedido:
-    def __init__(self, id, cliente, email, estado, productos=None, fecha_recepcion=None, datos_del_pago=None, total_a_pagar = 0 ):
+    def __init__(self, id, cliente, email, estado, metodo_envio, productos=None, fecha_recepcion=None, datos_del_pago=None, total_a_pagar = 0):
         self.id = id
         self.cliente = cliente
         self.email = email
@@ -12,6 +12,7 @@ class Pedido:
         self.total_a_pagar = total_a_pagar
         self.fecha_recepcion = fecha_recepcion
         self.pedido_persistido = False
+        self.metodo_envio = metodo_envio
     
     def calcular_total_a_pagar(self):
         for producto in self.productos:

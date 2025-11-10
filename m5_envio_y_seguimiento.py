@@ -62,13 +62,8 @@ class ModuloEnvios:
         #     tracking_id, 
         #     carrier
         # )
-
-        return {
-            "tracking_id": tracking_id,
-            "carrier": carrier,
-            "estado": estado,
-            "carrier": carrier
-        }
+        print("envio procesado")
+        return envio
 
 # Test local
 def test_modulo_con_store_externa():

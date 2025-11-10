@@ -26,6 +26,8 @@ class RecepcionPedido:
             self.errores.append("Falta lista de productos")
         if not data.get("datos_del_pago"):
             self.errores.append("Faltan datos del pago")
+        if not data.get("metodo_envio"):
+            self.errores.append("Falta método de envío")
         #FALTA REVISAR PRODUCTO POR PRODUCTO QUE ESTE EL SKU, PRECIO ETC, REALIZADO EN CREAR PEDIDO, DEBERIAMOS VER ESO ACA   
 
         if self.errores:
@@ -72,6 +74,7 @@ class RecepcionPedido:
             cliente = self.data["cliente"],
             email = self.data["email"],
             estado = "RECIBIDO",
+            metodo_envio = self.data["metodo_envio"],
             productos = productos,
             fecha_recepcion = datetime.now(),
             datos_del_pago = self.data["datos_del_pago"],

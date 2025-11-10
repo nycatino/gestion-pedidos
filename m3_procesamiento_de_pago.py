@@ -26,5 +26,6 @@ class ModuloPago:
 class Api_banco:
     def verificacion(self):
         
-        return random.choice([True, False])
+        #return random.choice([True, False])
+        return True
         

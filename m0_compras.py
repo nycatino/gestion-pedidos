@@ -51,6 +51,24 @@ def seleccionar_productos(productos_disponibles):
         else:
             print(" Opción inválida. Por favor, elija 1 o 2.")
 
+    #  Forma de envío (selección por número)
+    metodo_envio = ""
+    while metodo_envio == "":
+        print(f"\n Metodos de envío disponibles:")
+        print("1. Estándar")
+        print("2. Express")
+        print("3. Pickup")
+        opcion = input("Ingrese el número del método de envío (1, 2 o 3): ").strip()
+
+        if opcion == "1":
+            metodo_envio = "estandar"
+        elif opcion == "2":
+            metodo_envio = "express"
+        elif opcion == "3":
+            metodo_envio = "pickup"
+        else:
+            print(" Opción inválida. Por favor, elija 1 o 2.")
+
 
     #  Armar datos finales
     pedido = {
@@ -69,7 +87,8 @@ def seleccionar_productos(productos_disponibles):
             "metodo": forma_de_pago,
             "total_abonado":total,
             "numero_operacion":random.randint(1000, 20000)
-        }
+        },
+        "metodo_envio" : metodo_envio
     }
 
     return pedido
