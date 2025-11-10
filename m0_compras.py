@@ -1,5 +1,8 @@
 
 
+import random
+
+
 def seleccionar_productos(productos_disponibles):
     #  Datos del cliente
     cliente = input(" Ingrese su nombre: ").strip()
@@ -57,13 +60,15 @@ def seleccionar_productos(productos_disponibles):
         "productos": [
             {
                 "sku": p.sku,
+                "nombre": p.nombre,
                 "precio": p.precio,
                 "cantidad_solicitada": p.cantidad_solicitada
             } for p in seleccionados
         ],
         "datos_del_pago": {
             "metodo": forma_de_pago,
-            "total_abonado":total
+            "total_abonado":total,
+            "numero_operacion":random.randint(1000, 20000)
         }
     }
 

@@ -3,8 +3,9 @@ import random
 
 DEPOSITO_POR_DEFECTO = "deposito1"
 
+
 class Verificacion_disponibilidad_producto:
-    def __init__(self,orden_pedido, deposito = DEPOSITO_POR_DEFECTO):
+    def __init__(self,orden_pedido, deposito):
         self.orden_pedido = orden_pedido
         self.deposito = deposito
         self.reserva_id = f"STOCK_CHECK_{self.orden_pedido}"
@@ -25,13 +26,13 @@ class Verificacion_disponibilidad_producto:
             else: 
                 estado_disponibilidad_producto = "SIN_STOCK"
                 self.stock_disponible = False
-            self.consulta_disponibilidad_productos.append = {
-                "producto": producto.nombre,
+            self.consulta_disponibilidad_productos.append({
+                "nombre": producto.nombre,
                 "sku": producto.sku,
                 "cantidad_solicitada": cantidad_solicitada,
                 "cantidad_disponible": cant_disponible,
                 "disponibilidad": estado_disponibilidad_producto
-                }
+                })
             
         return self.stock_disponible
 
@@ -53,7 +54,6 @@ class Deposito:
         self.reserva_id = None
 
     def disponibilidad(self, sku):
-        sku +=0#no hace nada simplemente para molestar
         cant_disponible = random.randint(0, 100)
         return cant_disponible
     
@@ -72,7 +72,7 @@ class Deposito:
                 })
         return productos_reservados
 
-        
+    
 
 
             

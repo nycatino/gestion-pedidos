@@ -1,4 +1,3 @@
-import json
 import uuid
 from datetime import datetime
 from typing import Dict, Any, Union, Callable, Optional, List
@@ -40,17 +39,29 @@ class RecepcionPedido:
     def crear_pedido(self):
         # --- Crear objetos Item ---
         productos = []
-        
+        total_a_pagar = 0
         # CREAMOS LISTA DE PRODUCTOS
         for producto in self.data["productos"]:
             try:
-                sku = productos["sku"]
+                sku = producto["sku"]
+                nombre = producto["nombre"]
                 cantidad_solicitada = int(producto["cantidad_solicitada"])
-                precio = int(producto["precio"]),
-                productos.append(Producto(sku=sku, cantidad_solicitada = cantidad_solicitada, precio = precio))
-                total_a_pagar += precio 
+                precio = int(producto["precio"])             
+            
+                producto_obj = Producto(
+                    sku=sku,
+                    nombre=nombre,
+                    precio=precio,
+                    cantidad_solicitada=cantidad_solicitada
+                )
+
+                productos.append(producto_obj)
+                total_a_pagar += precio * cantidad_solicitada
+
             except Exception as e:
                 self.errores.append(f"Producto inválido: {producto} ({e})")
+                print(f" Error al crear producto: {producto} ({e})")
+
                 return False 
              
         # --- Generar orden de pedido ---
@@ -59,13 +70,11 @@ class RecepcionPedido:
         orden_pedido = Pedido(
             id = order_id,
             cliente = self.data["cliente"],
-            fecha_recepcion = datetime.now(),
             estado = "RECIBIDO",
             productos = productos,
-            datos_del_pago = self.data["datos_de_pago"],
-            pedido_persistido = False,
+            fecha_recepcion = datetime.now(),
+            datos_del_pago = self.data["datos_del_pago"],
             total_a_pagar = total_a_pagar
         )
 
-        return {orden_pedido}
-    
+        return orden_pedido
