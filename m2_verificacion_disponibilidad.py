@@ -39,13 +39,12 @@ class Verificacion_disponibilidad_producto:
 
     def reservar(self):
 
-        stock_disponible = self.consultar_stock()
-
-        if stock_disponible:
-            self.stock_reservado = self.deposito.reservar( fecha_hora_reserva = datetime.now(),
+        self.stock_reservado = self.deposito.reservar( fecha_hora_reserva = datetime.now(),
             productos = self.consulta_disponibilidad_productos)
-
-        return True
+        
+        if self.stock_reservado:
+            return True
+        else: return False
     
 
     
