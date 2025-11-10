@@ -1,6 +1,6 @@
 
 
-def seleccionar_productos_y_datos_cliente(productos_disponibles):
+def seleccionar_productos(productos_disponibles):
     #  Datos del cliente
     cliente = input(" Ingrese su nombre: ").strip()
     email = input(" Ingrese su email: ").strip()
@@ -33,9 +33,10 @@ def seleccionar_productos_y_datos_cliente(productos_disponibles):
             break
 
     #  Forma de pago (selección por número)
+    total = sum(p.precio * p.cantidad_solicitada for p in seleccionados)
     forma_de_pago = ""
     while forma_de_pago == "":
-        print("\n Formas de pago disponibles:")
+        print(f"\n Total a pagar: {total}\n Formas de pago disponibles:")
         print("1. Transferencia")
         print("2. Tarjeta")
         opcion = input("Ingrese el número de la forma de pago (1 o 2): ").strip()
@@ -61,7 +62,8 @@ def seleccionar_productos_y_datos_cliente(productos_disponibles):
             } for p in seleccionados
         ],
         "datos_del_pago": {
-            "metodo": forma_de_pago
+            "metodo": forma_de_pago,
+            "total_abonado":total
         }
     }
 

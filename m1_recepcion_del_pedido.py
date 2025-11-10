@@ -13,9 +13,9 @@ class RecepcionPedido:
 
     def validar_pedido(self):
         """ valida los campos """
-        
-        data = self.data     
 
+        data = self.data
+        
         # --- Validaciones básicas ---
         if not data.get("cliente"):
             self.errores.append("Falta nombre del cliente")
@@ -44,9 +44,9 @@ class RecepcionPedido:
         # CREAMOS LISTA DE PRODUCTOS
         for producto in self.data["productos"]:
             try:
-                sku = producto["sku"]
+                sku = productos["sku"]
                 cantidad_solicitada = int(producto["cantidad_solicitada"])
-                precio = int(producto["precio"])
+                precio = int(producto["precio"]),
                 productos.append(Producto(sku=sku, cantidad_solicitada = cantidad_solicitada, precio = precio))
                 total_a_pagar += precio 
             except Exception as e:

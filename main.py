@@ -8,7 +8,9 @@ from modelos.pedido import Pedido, Producto
 productos_disponibles = Producto.crear_productos()
 
 if __name__ == "__main__":
-    productos_seleccionados = seleccionar_productos(productos_disponibles)
+    pedido_source = seleccionar_productos(productos_disponibles)
 
-    recepcion_pedido = RecepcionPedido(productos_seleccionados)
+    recepcion_pedido = RecepcionPedido(pedido_source)
     validacion = recepcion_pedido.validar_pedido()
+
+    print (f"el pedido fue validado {validacion}")
