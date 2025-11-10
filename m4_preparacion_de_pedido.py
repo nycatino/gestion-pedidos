@@ -4,13 +4,12 @@ from typing import Dict, Optional, Callable, Any, Union
 from modelos.pedido import Pedido, Producto  # ✅ usamos el modelo compartido
 
 class ModuloPreparacion:
-    def __init__(self, productos):
+    def __init__(self):
         """
         pedidos_source puede ser:
          - un dict que mapea order_id -> Pedido
          - una función getter(order_id) -> Pedido | None
         """
-        self.productos = productos
         self.preparaciones: Dict[str, Any] = {}
 
     # --- Función auxiliar ---
@@ -43,8 +42,9 @@ class ModuloPreparacion:
 
 
     # --- Lógica principal ---
-    def preparar_pedido(self, productos):
-        productos = self.productos
+    def preparar_pedido(self, productos, order_id):
+
+        productos = productos
         # if not pedido:
         #     return {"error": "Pedido no encontrado", "order_id": order_id}
 
@@ -73,19 +73,17 @@ class ModuloPreparacion:
         # ---- ARREGLAR Confirmar preparación (pregunto en loop hasta que se confirme o se rechace el pedido)
         confirmado = self.confirmar_preparacion(picking_list, tiempo_estimado_preparacion)
         if confirmado == "rechazado":
-            return {"estado": "RECHAZADO"}
-
-        
+            return False
 
         # ------- MAIN  Actualizar estado del pedido
         estado = "LISTO_PARA_ENVIO"
 
-        # # Guardar en base de preparaciones simulada
-        # self.preparaciones[order_id] = {
-        #     "picking_list": picking_list,
-        #     "tiempo_estimado": tiempo_total,
-        #     "fecha_preparacion": datetime.now().isoformat()
-        # }
+        # Guardar en base de preparaciones simulada
+        self.preparaciones[order_id] = {
+            "picking_list": picking_list,
+            "tiempo_estimado": tiempo_estimado_preparacion,
+            "fecha_preparacion": datetime.now().isoformat()
+        }
 
         # Retornar resultado
         return {
@@ -97,7 +95,7 @@ class ModuloPreparacion:
 def test_modulo_preparacion():
     productos =[Producto("SKU123", 2, 3000), Producto("SKU456", 1, 4000)]
 
-    modulo = ModuloPreparacion(productos = productos)
+    modulo = ModuloPreparacion()
     resultado = modulo.preparar_pedido(productos)
 
     print("\n=== Resultado de preparación ===")

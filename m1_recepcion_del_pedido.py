@@ -30,7 +30,7 @@ class RecepcionPedido:
         #FALTA REVISAR PRODUCTO POR PRODUCTO QUE ESTE EL SKU, PRECIO ETC, REALIZADO EN CREAR PEDIDO, DEBERIAMOS VER ESO ACA   
 
         if self.errores:
-            return False   
+            return False 
         else:
             return True
         
@@ -51,7 +51,8 @@ class RecepcionPedido:
                 total_a_pagar += precio 
             except Exception as e:
                 self.errores.append(f"Producto inválido: {producto} ({e})")
-
+                return False 
+             
         # --- Generar orden de pedido ---
 
         order_id = f"ORDER-{str(uuid.uuid4())[:8]}"
