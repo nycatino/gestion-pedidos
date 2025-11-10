@@ -12,6 +12,8 @@ class Verificacion_disponibilidad_producto:
         self.consulta_disponibilidad_productos = []
         self.stock_reservado = []
 
+        self.errores = []
+
     def consultar_stock(self):
         
         for producto in self.orden_pedido.productos:
