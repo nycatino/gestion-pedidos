@@ -39,9 +39,6 @@ class ModuloEnvios:
     #     return mensaje
 
     def procesar_envio(self, estado, order_id, metodo_envio: str = "estandar"):
-        
-        if estado != "LISTO_PARA_ENVIO":
-            return {"error": "Pedido no listo para envío", "estado_actual": estado}
 
         carrier = self.seleccionar_carrier(metodo_envio)
         tracking_id = self.generar_tracking()
@@ -69,7 +66,8 @@ class ModuloEnvios:
         return {
             "tracking_id": tracking_id,
             "carrier": carrier,
-            "estado": estado
+            "estado": estado,
+            "carrier": carrier
         }
 
 # Test local
