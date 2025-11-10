@@ -11,6 +11,8 @@ class ModuloPago:
         self.numero_operacion = self.orden_pedido.datos_del_pago["numero_operacion"]
         self.total_abonado = self.orden_pedido.datos_del_pago["total_abonado"]
 
+        self.errores = []
+
 
     def verificar_pago(self):
         estado_del_pago = self.api_banco.verificacion(self.numero_operacion)
@@ -18,6 +20,7 @@ class ModuloPago:
         if estado_del_pago and self.total_a_pagar == self.total_abonado:
             return True
         else:
+            self.errores.append("No se pudo verificar el pago")
             return False
 
 class Api_banco:

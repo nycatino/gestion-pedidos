@@ -5,12 +5,9 @@ from modelos.pedido import Pedido, Producto  # ✅ usamos el modelo compartido
 
 class ModuloPreparacion:
     def __init__(self):
-        """
-        pedidos_source puede ser:
-         - un dict que mapea order_id -> Pedido
-         - una función getter(order_id) -> Pedido | None
-        """
+        
         self.preparaciones: Dict[str, Any] = {}
+        self.errores = []
 
     # --- Función auxiliar ---
     def simular_ubicacion(self, sku: str) :
@@ -73,6 +70,7 @@ class ModuloPreparacion:
         # ---- ARREGLAR Confirmar preparación (pregunto en loop hasta que se confirme o se rechace el pedido)
         confirmado = self.confirmar_preparacion(picking_list, tiempo_estimado_preparacion)
         if confirmado == "rechazado":
+            self.errores.append("No se pudo confirma la preparacion")
             return False
 
         # ------- MAIN  Actualizar estado del pedido
