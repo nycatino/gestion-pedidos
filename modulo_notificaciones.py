@@ -3,6 +3,9 @@ from datetime import datetime
 
 class modulo_Notificaciones:
 
+    def __init__(self):
+        self.notificaciones = []
+
     def guardar_notificacion(self, cliente, mensaje):
         self.notificaciones.append({
             "cliente": cliente,

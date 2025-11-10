@@ -70,6 +70,7 @@ class RecepcionPedido:
         orden_pedido = Pedido(
             id = order_id,
             cliente = self.data["cliente"],
+            email = self.data["email"],
             estado = "RECIBIDO",
             productos = productos,
             fecha_recepcion = datetime.now(),

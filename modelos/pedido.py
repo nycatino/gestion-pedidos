@@ -2,9 +2,10 @@ import random
 
 
 class Pedido:
-    def __init__(self, id, cliente, estado, productos=None, fecha_recepcion=None, datos_del_pago=None, total_a_pagar = 0 ):
+    def __init__(self, id, cliente, email, estado, productos=None, fecha_recepcion=None, datos_del_pago=None, total_a_pagar = 0 ):
         self.id = id
         self.cliente = cliente
+        self.email = email
         self.estado = estado
         self.productos = productos or []
         self.datos_del_pago = datos_del_pago
