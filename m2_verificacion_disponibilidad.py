@@ -4,18 +4,17 @@ import random
 DEPOSITO_POR_DEFECTO = "deposito1"
 
 class Verificacion_disponibilidad_producto:
-    def __init__(self,order_id, deposito = DEPOSITO_POR_DEFECTO):
-        self.order_id = order_id
+    def __init__(self,orden_pedido, deposito = DEPOSITO_POR_DEFECTO):
+        self.orden_pedido = orden_pedido
         self.deposito = deposito
-        self.reserva_id = f"STOCK_CHECK_{self.order_id}"
-        self.disponibilidad_total = True
+        self.reserva_id = f"STOCK_CHECK_{self.orden_pedido}"
+        self.stock_disponible = True
         self.consulta_disponibilidad_productos = []
         self.stock_reservado = []
 
     def consultar_stock(self):
         
-        for producto in self.order_id.productos:
-            #order_id tendria que tener un atributo productos, que deberia ser una lista donde cada elemento es un diccionario {sku, nombre, cantidad_solicitada}
+        for producto in self.orden_pedido.productos:
             sku = producto.sku
             cantidad_solicitada = producto.cantidad_solicitada
             cant_disponible = self.deposito.disponibilidad(sku)
@@ -25,7 +24,7 @@ class Verificacion_disponibilidad_producto:
                 estado_disponibilidad_producto = "STOCK_DISPONIBLE"
             else: 
                 estado_disponibilidad_producto = "SIN_STOCK"
-                self.disponibilidad_total = False
+                self.stock_disponible = False
             self.consulta_disponibilidad_productos.append = {
                 "producto": producto.nombre,
                 "sku": producto.sku,
@@ -34,39 +33,45 @@ class Verificacion_disponibilidad_producto:
                 "disponibilidad": estado_disponibilidad_producto
                 }
             
-        return self.disponibilidad_total
+        return self.stock_disponible
 
     def reservar(self):
 
         stock_disponible = self.consultar_stock()
+
         if stock_disponible:
             self.stock_reservado = self.deposito.reservar( fecha_hora_reserva = datetime.now(),
             productos = self.consulta_disponibilidad_productos)
 
-        return self.stock_reservado
+        return True
+    
+
+    
 
 class Deposito:
-    def __init__(self, reserva_id, nombre = DEPOSITO_POR_DEFECTO):
+    def __init__(self, nombre = DEPOSITO_POR_DEFECTO):
         self.nombre = nombre,
-        self.reserva_id = reserva_id
+        self.reserva_id = None
 
-    def disponibilidad(self,sku):
+    def disponibilidad(self, sku):
+        sku +=0#no hace nada simplemente para molestar
         cant_disponible = random.randint(0, 100)
         return cant_disponible
     
     def reservar(self, fecha_hora_reserva , productos):
-        reservas=[]
+        productos_reservados=[]
         expiracion = fecha_hora_reserva + timedelta(minutes=30)
+        
         for producto in productos:
 
-            reservas.append({"nombre":productos["nombre"],
-                    "sku": productos["sku"],
-                    "cantidad_solicitada": productos["cantidad_solicitada"],
-                    "cantidad_reservada": productos["cantidad_solicitada"],
+            productos_reservados.append({"nombre":producto["nombre"],
+                    "sku": producto["sku"],
+                    "cantidad_solicitada": producto["cantidad_solicitada"],
+                    "cantidad_reservada": producto["cantidad_solicitada"],
                     "fecha_hora_reserva":fecha_hora_reserva,
                     "expiracion": expiracion
                 })
-        return reservas
+        return productos_reservados
 
         
 

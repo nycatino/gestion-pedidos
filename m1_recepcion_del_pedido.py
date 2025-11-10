@@ -5,7 +5,7 @@ from typing import Dict, Any, Union, Callable, Optional, List
 from modelos.pedido import Pedido, Item
 
 
-class ModuloRecepcion:
+class RecepcionPedido:
     def __init__(self, pedidos_source):
        
        self.data = json.loads(pedidos_source)
@@ -27,12 +27,18 @@ class ModuloRecepcion:
             self.errores.append("Falta dirección de envío")
         if not data.get("productos"):
             self.errores.append("Falta lista de productos")
+        if not data.get("datos_del_pago"):
+            self.errores.append("Faltan datos del pago")
+        #FALTA REVISAR PRODUCTO POR PRODUCTO QUE ESTE EL SKU, PRECIO ETC, REALIZADO EN CREAR PEDIDO, DEBERIAMOS VER ESO ACA   
 
         if self.errores:
-            return {"estado": "RECHAZADO", "errores": self.errores}
-
-        #FALTA VER BIEN EL RETORNO DE ESTA FUNCION
-
+            return False   
+        else:
+            return True
+        
+    def errores_pedido(self):
+        return self.errores
+    
     def crear_pedido(self):
         # --- Crear objetos Item ---
         productos = []
@@ -43,25 +49,23 @@ class ModuloRecepcion:
                 sku = productos["sku"]
                 cantidad_solicitada = int(producto["cantidad_solicitada"])
                 precio = int(producto["precio"]),
-                productos.append(Item(sku=sku, cantidad_solicitada=cantidad_solicitada))
-                
+                productos.append(Item(sku=sku, cantidad_solicitada = cantidad_solicitada, precio = precio))
+                total_a_pagar += precio 
             except Exception as e:
                 self.errores.append(f"Producto inválido: {producto} ({e})")
 
-        if self.errores:
-            #FALTA PERSISTIR
-            return {"estado": "RECHAZADO", "errores": self.errores}
-
         # --- Generar orden de pedido ---
+
         order_id = f"ORDER-{str(uuid.uuid4())[:8]}"
         orden_pedido = Pedido(
             id = order_id,
             cliente = self.data["cliente"],
             fecha_recepcion = datetime.now(),
-            estado="RECIBIDO",
-            productos=productos,
-            medio_de_pago = self.medio_de_pago,
-            pedido_persistido = False
+            estado = "RECIBIDO",
+            productos = productos,
+            datos_del_pago = self.data["datos_de_pago"],
+            pedido_persistido = False,
+            total_a_pagar = total_a_pagar
         )
 
         return {orden_pedido}

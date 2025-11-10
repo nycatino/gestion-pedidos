@@ -4,8 +4,9 @@ class Pedido:
         self.cliente = cliente
         self.estado = estado
         self.productos = productos or []
-        self.medio_de_pago = None
-        self.monto = None
+        self.datos_del_pago = None
+        self.total_a_pagar = None
+
     def __repr__(self):
         return f"<Pedido {self.id} - {self.estado}>"
 
