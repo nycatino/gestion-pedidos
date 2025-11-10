@@ -2,21 +2,19 @@ import json
 import uuid
 from datetime import datetime
 from typing import Dict, Any, Union, Callable, Optional, List
-from modelos.pedido import Pedido, Item
+from modelos.pedido import Pedido, Producto
 
 
 class RecepcionPedido:
     def __init__(self, pedidos_source):
        
-       self.data = json.loads(pedidos_source)
+       self.data = pedidos_source
        self.errores = [] 
 
     def validar_pedido(self):
         """ valida los campos """
-        try:
-            data = json.loads(self.pedido_json)
-        except json.JSONDecodeError:
-            return {"estado": "RECHAZADO", "errores": ["JSON inválido"]}
+        
+        data = self.data     
 
         # --- Validaciones básicas ---
         if not data.get("cliente"):
@@ -46,10 +44,10 @@ class RecepcionPedido:
         # CREAMOS LISTA DE PRODUCTOS
         for producto in self.data["productos"]:
             try:
-                sku = productos["sku"]
+                sku = producto["sku"]
                 cantidad_solicitada = int(producto["cantidad_solicitada"])
-                precio = int(producto["precio"]),
-                productos.append(Item(sku=sku, cantidad_solicitada = cantidad_solicitada, precio = precio))
+                precio = int(producto["precio"])
+                productos.append(Producto(sku=sku, cantidad_solicitada = cantidad_solicitada, precio = precio))
                 total_a_pagar += precio 
             except Exception as e:
                 self.errores.append(f"Producto inválido: {producto} ({e})")
