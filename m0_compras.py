@@ -6,7 +6,14 @@ import random
 def seleccionar_productos(productos_disponibles):
     #  Datos del cliente
     cliente = input(" Ingrese su nombre: ").strip()
-    email = input(" Ingrese su email: ").strip()
+    while True:
+        email = input(" Ingrese su email: ").strip()
+
+        if "@" in email and "." in email.split("@")[-1]:
+            break
+        else:
+            print(" Email inválido. Intente nuevamente.")
+
     direccion = input(" Ingrese su dirección de envío: ").strip()
 
     # Selección de productos
@@ -56,13 +63,14 @@ def seleccionar_productos(productos_disponibles):
         print("1. Transferencia")
         print("2. Tarjeta")
         opcion = input("Ingrese el número de la forma de pago (1 o 2): ").strip()
-
+        while (opcion != "1" and opcion != "2"): 
+            print("Ingrese (1 o 2)")
+            opcion = input("Ingrese el número de la forma de pago (1 o 2): ").strip()
         if opcion == "1":
             forma_de_pago = "transferencia"
         elif opcion == "2":
             forma_de_pago = "tarjeta"
-        else:
-            print(" Opción inválida. Por favor, elija 1 o 2.")
+
 
     #  Forma de envío (selección por número)
     metodo_envio = ""
@@ -72,15 +80,15 @@ def seleccionar_productos(productos_disponibles):
         print("2. Express")
         print("3. Pickup")
         opcion = input("Ingrese el número del método de envío (1, 2 o 3): ").strip()
-
+        while (opcion != "1" and opcion != "2" and opcion != "3"): 
+            print("Ingrese (1, 2 o 3)")
+            opcion = input("Ingrese el número del método de envío (1, 2 o 3): ").strip()
         if opcion == "1":
             metodo_envio = "estandar"
         elif opcion == "2":
             metodo_envio = "express"
         elif opcion == "3":
             metodo_envio = "pickup"
-        else:
-            print(" Opción inválida. Por favor, elija 1 o 2.")
 
 
     #  Armar datos finales

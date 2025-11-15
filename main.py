@@ -20,12 +20,11 @@ if __name__ == "__main__":
     recepcion_pedido = RecepcionPedido(pedido_source)
     validacion_datos_pedido = recepcion_pedido.validar_pedido()
     #CREAMOS PEDIDO 
+    modulo_Notificaciones = Modulo_Notificaciones()
     if validacion_datos_pedido:
         print (f"el pedido fue validado {validacion_datos_pedido}")##MODULO NOTIFICACIONES
         orden_pedido = recepcion_pedido.crear_pedido()
         print (f"el pedido fue CREADO CON EXITO {orden_pedido}")
-
-        modulo_Notificaciones = Modulo_Notificaciones()
 
         ######VERIFICAMOS DISPONIBILIDAD MODULO 2#############   
         deposito = Deposito()  
@@ -87,7 +86,6 @@ if __name__ == "__main__":
         # for error in recepcion_pedido.errores_pedido():
         #     print (error)
         #NOTIFICAR FALTA DE DATOS EN LA SOLICITUD DE PEDIDO
-        modulo_Notificaciones = Modulo_Notificaciones()
         modulo_Notificaciones.pedido_rechazado(recepcion_pedido.errores)
         #FALTA PERSISTIR DESDE EL MODULO RECEPCION Y NOTIFICAR
 
