@@ -16,23 +16,36 @@ def seleccionar_productos(productos_disponibles):
         for i, producto in enumerate(productos_disponibles):
             print(f"{i}. {producto}")
 
-        try:
-            indice = int(input(" Ingrese el número del producto que desea agregar: "))
-            if 0 <= indice < len(productos_disponibles):
+        while True:
+            try:
+                indice = int(input(" Ingrese el número del producto que desea agregar: "))
+                if (0 <= indice < len(productos_disponibles) ):
+                    break   # si llega hasta acá → es válido → rompemos el bucle
+                else:
+                    print("Índice inválido.")
+            except ValueError:
+                print("Valor inválido. Intente nuevamente.")
+        
+        while True:
+            try:
                 cantidad = int(input(" Ingrese cantidad del producto que desea comprar: "))
-                if cantidad >= 0:
-                    productos_disponibles[indice].cantidad_solicitada = cantidad
-                    seleccionados.append(productos_disponibles[indice])
-                    print(f" Agregado: {productos_disponibles[indice].nombre} x{cantidad}")
+                if (cantidad >= 0 ):
+                    break   # si llega hasta acá → es válido → rompemos el bucle
                 else:
                     print(" La cantidad debe ser mayor o igual a cero.")
-            else:
-                print(" Índice inválido.")
-        except ValueError:
-            print(" Por favor, ingrese un número válido.")
+            except ValueError:
+                print("Valor inválido. Intente nuevamente.")
+
+        productos_disponibles[indice].cantidad_solicitada = cantidad
+        seleccionados.append(productos_disponibles[indice])
+        print(f" Agregado: {productos_disponibles[indice].nombre} x{cantidad}")
 
         continuar = input("¿Desea agregar otro producto? (s/n): ").strip().lower()
-        if continuar != "s":
+        #Aca el profe ingreso x, y se procedió a la forma de pago.
+        while (continuar != "n" and continuar != "s"): 
+            print("Ingrese (s/n)")
+            continuar = input("¿Desea agregar otro producto? (s/n): ").strip().lower()
+        if continuar == "n":
             break
 
     #  Forma de pago (selección por número)
