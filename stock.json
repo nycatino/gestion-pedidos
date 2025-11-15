@@ -1,0 +1,32 @@
+[
+    {
+        "sku": "ART_0",
+        "nombre": "Articulo0",
+        "precio": 4168,
+        "stock": 96
+    },
+    {
+        "sku": "ART_1",
+        "nombre": "Articulo1",
+        "precio": 18531,
+        "stock": 36
+    },
+    {
+        "sku": "ART_2",
+        "nombre": "Articulo2",
+        "precio": 15022,
+        "stock": 54
+    },
+    {
+        "sku": "ART_3",
+        "nombre": "Articulo3",
+        "precio": 15615,
+        "stock": 82
+    },
+    {
+        "sku": "ART_4",
+        "nombre": "Articulo4",
+        "precio": 9165,
+        "stock": 7
+    }
+]

@@ -1,9 +1,30 @@
 
-
+import json
 import random
 
+from modelos.pedido import Producto
 
-def seleccionar_productos(productos_disponibles):
+def cargar_productos_desde_json(archivo="stock.json"):
+    with open(archivo, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    productos = []
+
+    for item in data:   # porque ahora data es una LISTA, no un dict
+        sku = item["sku"]
+        nombre = item["nombre"]
+        precio = item["precio"]
+        stock = item["stock"]
+
+        producto = Producto(sku, nombre, precio)
+        producto.stock = stock   # atributo agregado dinámicamente
+
+        productos.append(producto)
+
+    return productos
+
+def seleccionar_productos(stock):
+    productos_disponibles = cargar_productos_desde_json(stock)
     #  Datos del cliente
     cliente = input(" Ingrese su nombre: ").strip()
     while True:
