@@ -9,19 +9,19 @@
         "sku": "ART_1",
         "nombre": "Articulo1",
         "precio": 2000,
-        "stock": 100
+        "stock": 98
     },
     {
         "sku": "ART_2",
         "nombre": "Articulo2",
         "precio": 3000,
-        "stock": 96
+        "stock": 100
     },
     {
         "sku": "ART_3",
         "nombre": "Articulo3",
         "precio": 4000,
-        "stock": 100
+        "stock": 97
     },
     {
         "sku": "ART_4",

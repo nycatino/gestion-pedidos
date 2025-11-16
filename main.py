@@ -6,7 +6,7 @@ from m3_procesamiento_de_pago import ModuloPago, Api_banco
 from m4_preparacion_de_pedido import ModuloPreparacion
 from m5_envio_y_seguimiento import ModuloEnvios
 from modelos.pedido import Pedido, Producto
-from modulo_notificaciones import Modulo_Notificaciones
+from m6_modulo_notificaciones import Modulo_Notificaciones
 
 ##CREAMOS LOS PRODUCTOS DISPONIBLES
 stock = "stock.json"
@@ -25,7 +25,7 @@ while True:
         validacion_datos_pedido = recepcion_pedido.validar_pedido()
         #CREAMOS PEDIDO 
         if validacion_datos_pedido:
-            print (f"\n-- NOTIFICACION: Datos de pedido completos --\n")##MODULO NOTIFICACIONES
+            print (f"\n-- NOTIFICACION: Datos de pedido completos--\n")##MODULO NOTIFICACIONES
             orden_pedido = recepcion_pedido.crear_pedido()
             print (f"\n--------- Pedido CREADO CON EXITO ---------\n")
             print(orden_pedido)

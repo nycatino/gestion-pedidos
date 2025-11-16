@@ -1,5 +1,5 @@
 from datetime import datetime
-from modulo_notificaciones import modulo_Notificaciones
+from m6_modulo_notificaciones import modulo_Notificaciones
 
 def test_pedido_rechazado():
     # Crear instancia y agregar una lista interna para guardar las notificaciones
