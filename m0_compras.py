@@ -8,6 +8,7 @@ from modelos.pedido import Producto
 seleccionados = []
 
 def cargar_productos_desde_json(deposito):
+    deposito._limpiar_reservas_expiradas() #LIMPIO RESERVAS ANTES DE MOSTRAR STOCK
     data = deposito.cargar_stock()
     # with open(archivo, "r", encoding="utf-8") as f:
     #     data = json.load(f)
@@ -61,8 +62,10 @@ def obtener_cliente():
 
 def seleccionar_productos(deposito):
     
+    vaux = 0
     #Selección de productos
     productos_disponibles = cargar_productos_desde_json(deposito)
+
     while True:
         print("\n ----------- Productos disponibles -----------\n")
         for i, producto in enumerate(productos_disponibles):
@@ -72,8 +75,12 @@ def seleccionar_productos(deposito):
         while True:
             try:
                 indice = int(input(" Ingrese el número del producto que desea agregar: "))
-                if (0 <= indice < len(productos_disponibles) ):
-                    break   # si llega hasta acá → es válido → rompemos el bucle
+                if (0 <= indice < len(productos_disponibles) ): 
+                    if productos_disponibles[indice].stock == 0:
+                        print(" ERROR: No hay stock disponible\n")
+                    else:
+                        break   # si llega hasta acá → es válido → rompemos el bucle
+                
                 else:
                     print(" ERROR: Indice invalido\n")
             except ValueError:
@@ -89,8 +96,14 @@ def seleccionar_productos(deposito):
             except ValueError:
                 print(" ERROR: Valor invalido\n")
 
-        productos_disponibles[indice].cantidad_solicitada = cantidad
-        seleccionados.append(productos_disponibles[indice])
+        for p in seleccionados:
+            if p.sku == productos_disponibles[indice].sku:
+                p.cantidad_solicitada += cantidad
+                vaux = 1
+        if not vaux: 
+            producto = productos_disponibles[indice]              
+            producto.cantidad_solicitada = cantidad
+            seleccionados.append(productos_disponibles[indice])
         print(f"---Agregado: {productos_disponibles[indice].nombre}---\n---Cantidad:{cantidad}---")
         productos_disponibles[indice].stock = productos_disponibles[indice].stock - cantidad # ESTA LINEA ES LA QUE PERMITE MODIFICAR STOCK DISPONIBLE
 
@@ -100,7 +113,6 @@ def seleccionar_productos(deposito):
         while (continuar != "n" and continuar != "s"): 
             print(" ERROR: Opcion no valida - Ingrese (s/n)\n")
             continuar = input("¿Desea agregar otro producto? (s/n): ").strip().lower()
-            #LLAMAR A UNA FUNCION DE RESERVA
         if continuar == "n":
             break
 
@@ -113,10 +125,10 @@ def definir_pago():
         print(f"\n----- Total a pagar: {total} -----\n Formas de pago disponibles:")
         print("1. Transferencia")
         print("2. Tarjeta")
-        opcion = input("Ingrese el número de la forma de pago ( 1 / 2 ): ").strip()
+        opcion = input("Ingrese el pago mediante ( 1 / 2 ): ").strip()
         while (opcion != "1" and opcion != "2"): 
             print(" ERROR: Opcion no valida\n")
-            opcion = input("Ingrese el número de la forma de pago ( 1 / 2 ): ").strip()
+            opcion = input("Ingrese el pago mediante ( 1 / 2 ):  ").strip()
         if opcion == "1":
             forma_de_pago = "transferencia"
         elif opcion == "2":
@@ -177,3 +189,6 @@ def armar_pedido(deposito): #TODAS LAS FUNCIONES SE EJECUTAN DESDE ESTA FUNCION
     }
 
     return pedido
+
+def vaciar_seleccionados():
+     seleccionados.clear()

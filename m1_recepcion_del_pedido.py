@@ -65,7 +65,7 @@ class RecepcionPedido:
                 print(f" Error al crear producto: {producto} ({e})")
 
                 return False 
-             
+            
         # --- Generar orden de pedido ---
 
         order_id = f"ORDER-{str(uuid.uuid4())[:8]}"

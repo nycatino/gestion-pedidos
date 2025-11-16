@@ -2,31 +2,31 @@
     {
         "sku": "ART_0",
         "nombre": "Articulo0",
-        "precio": 4168,
-        "stock": 96
+        "precio": 1000,
+        "stock": 100
     },
     {
         "sku": "ART_1",
         "nombre": "Articulo1",
-        "precio": 18531,
-        "stock": 36
+        "precio": 2000,
+        "stock": 100
     },
     {
         "sku": "ART_2",
         "nombre": "Articulo2",
-        "precio": 15022,
-        "stock": 31
+        "precio": 3000,
+        "stock": 100
     },
     {
         "sku": "ART_3",
         "nombre": "Articulo3",
-        "precio": 15615,
-        "stock": 82
+        "precio": 4000,
+        "stock": 100
     },
     {
         "sku": "ART_4",
         "nombre": "Articulo4",
-        "precio": 9165,
-        "stock": 7
+        "precio": 5000,
+        "stock": 100
     }
 ]

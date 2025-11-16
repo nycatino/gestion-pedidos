@@ -25,13 +25,12 @@ class Verificacion_disponibilidad_producto:
             sku = producto.sku
             cantidad_solicitada = producto.cantidad_solicitada
             cant_disponible = self.deposito.disponibilidad(sku)
-            ## funcion que recibe sku y devuelva aleatorio.
-
+            
             if cant_disponible >= cantidad_solicitada :
                 estado_disponibilidad_producto = "STOCK_DISPONIBLE"
             else: 
                 estado_disponibilidad_producto = "SIN_STOCK"
-                self.stock_disponible = False
+                self.stock_disponible = False ## SI AL MENOS FALTA UNO, DEVOLVEMOS FALSO PORQUE NO HAY VENTAS PARCIALES
             self.consulta_disponibilidad_productos.append({
                 "nombre": producto.nombre,
                 "sku": producto.sku,
