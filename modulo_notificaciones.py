@@ -9,9 +9,10 @@ class Modulo_Notificaciones:
     def pedido_rechazado(self, errores):
         # unir los errores en una cadena legible
         errores_texto = ", ".join(errores)
-        mensaje = f"Hola! Tu pedido ha sido rechazado por los siguientes motivos: {errores_texto}"
+        mensaje = f"\nHola! Tu pedido ha sido rechazado por los siguientes motivos: {errores_texto}\n"
         # guardar la notificación correctamente
         print(mensaje) 
+        errores_texto = ""
 
 
     def enviar_seguimiento(self, tracking, carrier):

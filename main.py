@@ -25,7 +25,7 @@ while True:
         validacion_datos_pedido = recepcion_pedido.validar_pedido()
         #CREAMOS PEDIDO 
         if validacion_datos_pedido:
-            print (f"\n--Datos pedido completos--\n")##MODULO NOTIFICACIONES
+            print (f"\n-- NOTIFICACION: Datos de pedido completos --\n")##MODULO NOTIFICACIONES
             orden_pedido = recepcion_pedido.crear_pedido()
             print (f"\n--------- Pedido CREADO CON EXITO ---------\n")
             print(orden_pedido)

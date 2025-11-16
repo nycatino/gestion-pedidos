@@ -1,7 +1,12 @@
 [
     {
-        "sku": "ART_0",
-        "cantidad_reservada": 1,
-        "expiracion": "2025-11-16 15:35:09"
+        "sku": "ART_2",
+        "cantidad_reservada": 2,
+        "expiracion": "2025-11-16 19:36:11"
+    },
+    {
+        "sku": "ART_2",
+        "cantidad_reservada": 2,
+        "expiracion": "2025-11-16 19:38:09"
     }
 ]

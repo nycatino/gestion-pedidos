@@ -20,7 +20,9 @@ class ModuloPago:
         if estado_del_pago and self.total_a_pagar == self.total_abonado:
             return True
         else:
+            self.errores.clear()
             self.errores.append("No se pudo verificar el pago")
+            #self.errores = "No se pudo verificar el pago"
             return False
 
 class Api_banco:

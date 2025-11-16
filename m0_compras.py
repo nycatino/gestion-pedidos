@@ -104,7 +104,7 @@ def seleccionar_productos(deposito):
             producto = productos_disponibles[indice]              
             producto.cantidad_solicitada = cantidad
             seleccionados.append(productos_disponibles[indice])
-        print(f"---Agregado: {productos_disponibles[indice].nombre}---\n---Cantidad:{cantidad}---")
+        print(f"--- Agregado: {productos_disponibles[indice].nombre} ---\n--- Cantidad: {cantidad} ---")
         productos_disponibles[indice].stock = productos_disponibles[indice].stock - cantidad # ESTA LINEA ES LA QUE PERMITE MODIFICAR STOCK DISPONIBLE
 
         print()
