@@ -67,13 +67,12 @@ class ModuloPreparacion:
         tiempo_empaquetado = 5
         tiempo_estimado_preparacion = (len(productos) * tiempo_por_item) + tiempo_empaquetado
 
-        # ---- ARREGLAR Confirmar preparación (pregunto en loop hasta que se confirme o se rechace el pedido)
+        
         confirmado = self.confirmar_preparacion(picking_list, tiempo_estimado_preparacion)
         if confirmado == "rechazado":
             self.errores.append("No se pudo confirmar la preparacion")
             return False
 
-        # ------- MAIN  Actualizar estado del pedido
         estado = "LISTO_PARA_ENVIO"
 
         # Guardar en base de preparaciones simulada

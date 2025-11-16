@@ -16,7 +16,7 @@ class ModuloPago:
 
     def verificar_pago(self):
         estado_del_pago = self.api_banco.verificacion(self.numero_operacion)
-
+#no entiendo la diferencia entre total a pagar y totabl abonado
         if estado_del_pago and self.total_a_pagar == self.total_abonado:
             return True
         else:

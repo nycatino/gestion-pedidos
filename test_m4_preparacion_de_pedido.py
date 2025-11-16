@@ -10,14 +10,15 @@ def test_preparar_pedido_confirmado():
 
     # Simulamos que el usuario confirma con 's'
     original_input = builtins.input
+    #Guarda la función real input() para poder restaurarla después.
     builtins.input = lambda _: "s"
-
+    #Esto hace que cada vez que el código llame a input(), en vez de esperar al usuario, use next(respuestas).
     productos = [
         Producto("SKU123", 2, 3000),
         Producto("SKU456", 1, 4000)
     ]
 
-    pedido = Pedido(id="ORD001", cliente="Juan Pérez", estado="PAGO_APROBADO", productos=productos)
+    pedido = Pedido(id="ORD001", cliente="Juan Pérez", estado="PAGO_APROBADO", productos=productos, email = "jperez@hotmail.com", metodo_envio = "estandar")
 
     resultado = mod.preparar_pedido(pedido)
 
@@ -28,7 +29,7 @@ def test_preparar_pedido_confirmado():
     assert "ORD001" in mod.preparaciones
     assert len(mod.preparaciones["ORD001"]["picking_list"]) == len(productos)
     assert isinstance(datetime.fromisoformat(mod.preparaciones["ORD001"]["fecha_preparacion"]), datetime)
-
+#La fecha guardada en mod.preparaciones["ORD001"]["fecha_preparacion"] es un string en formato ISO válido y puede convertirse correctamente en un objeto datetime.
 
 def test_preparar_pedido_rechazado():
     """Simula rechazo con 'r'"""
@@ -38,7 +39,7 @@ def test_preparar_pedido_rechazado():
     builtins.input = lambda _: "r"
 
     productos = [Producto("SKU789", 3, 5000)]
-    pedido = Pedido(id="ORD002", cliente="Laura", estado="PAGO_APROBADO", productos=productos)
+    pedido = Pedido(id="ORD002", cliente="Laura", estado="PAGO_APROBADO", productos=productos, email = "jperez@hotmail.com", metodo_envio = "estandar")
 
     resultado = mod.preparar_pedido(pedido)
 
@@ -58,7 +59,7 @@ def test_preparar_pedido_repite_y_confirma():
     builtins.input = lambda _: next(respuestas)
 
     productos = [Producto("SKU999", 1, 2000)]
-    pedido = Pedido(id="ORD003", cliente="Carlos", estado="PAGO_APROBADO", productos=productos)
+    pedido = Pedido(id="ORD003", cliente="Carlos", estado="PAGO_APROBADO", productos=productos, email = "jperez@hotmail.com", metodo_envio = "estandar")
 
     resultado = mod.preparar_pedido(pedido)
 

@@ -28,15 +28,6 @@ class ModuloEnvios:
     def generar_tracking(self):
         return f"TRK-{str(uuid.uuid4())[:8].upper()}"
     
-# LLAMAR MODULO DE NOTIFIFCACIONES?
-    # def enviar_notificacion(self, cliente: str, tracking: str, carrier: str) -> str:
-    #     mensaje = f"Hola {cliente}: Tu pedido está en camino!\nTracking: {tracking}\nCarrier: {carrier}"
-    #     self.notificaciones.append({
-    #         "cliente": cliente,
-    #         "mensaje": mensaje,
-    #         "fecha": datetime.now()
-    #     })
-    #     return mensaje
 
     def procesar_envio(self, orden_pedido):
 
@@ -55,7 +46,7 @@ class ModuloEnvios:
         )
         self.envios[tracking_id] = envio
 
-        estado = "EN_TRANSITO"
+#        estado = "EN_TRANSITO"
 # ------MAIN
         # notificacion = self.enviar_notificacion(
         #     pedido.cliente, 
