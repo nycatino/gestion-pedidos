@@ -22,7 +22,7 @@ class ModuloPreparacion:
         print(f"Tiempo estimado de preparación: {tiempo_estimado_preparacion} minutos")
 
         while True:
-            respuesta = input("¿Confirmar preparación? (s = sí / n = no / r = rechazar pedido): ").lower().strip()
+            respuesta = input("¿Confirmar disponibilidad stock real? (s = sí / n = no / r = rechazar pedido): ").lower().strip()
 
             if respuesta == 's':
                 print("Preparación confirmada")

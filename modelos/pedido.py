@@ -39,7 +39,8 @@ class Producto:
         self.nombre = nombre
         self.cantidad_solicitada = cantidad_solicitada
         self.precio = precio
-
+        self.stock = None
+    
     @staticmethod
     def crear_productos():
         productos=[]
@@ -52,4 +53,4 @@ class Producto:
         return productos    
 
     def __repr__(self):
-        return f"<Producto: {self.nombre} (sku: {self.sku}, Precio: {self.precio})>"
+        return f"<Producto: {self.nombre} (sku: {self.sku}, Precio: {self.precio}, Stock disponible: {self.stock})>"

@@ -10,11 +10,12 @@ from modulo_notificaciones import Modulo_Notificaciones
 
 ##CREAMOS LOS PRODUCTOS DISPONIBLES
 stock = "stock.json"
+deposito = Deposito()  
 
 if __name__ == "__main__":
     
     ##EL CLIENTE SELECCIONA EL PEDIDO
-    pedido_source = seleccionar_productos(stock)
+    pedido_source = seleccionar_productos(deposito)
 
     #####VALIDAMOS DATOS PEDIDO MODULO1########
     recepcion_pedido = RecepcionPedido(pedido_source)
@@ -27,7 +28,7 @@ if __name__ == "__main__":
         print (f"el pedido fue CREADO CON EXITO {orden_pedido}")
 
         ######VERIFICAMOS DISPONIBILIDAD MODULO 2#############   
-        deposito = Deposito()  
+        # deposito = Deposito()  
         verificacion_disponibilidad = Verificacion_disponibilidad_producto(orden_pedido, deposito)
         disponibilidad_stock = verificacion_disponibilidad.consultar_stock()
         print (f"disponibilidad productos: {disponibilidad_stock}")

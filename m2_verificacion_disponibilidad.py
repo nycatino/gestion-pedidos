@@ -11,7 +11,7 @@ class Verificacion_disponibilidad_producto:
     def __init__(self,orden_pedido, deposito):
         self.orden_pedido = orden_pedido
         self.deposito = deposito
-        self.reserva_id = f"STOCK_CHECK_{self.orden_pedido}"
+        self.reserva_id = f"STOCK_CHECK_{random.randint(1,1000000)}"
         self.stock_disponible = True
         self.consulta_disponibilidad_productos = []
         self.stock_reservado = []

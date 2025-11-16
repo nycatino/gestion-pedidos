@@ -1,12 +1,14 @@
 
 import json
 import random
+from m2_verificacion_disponibilidad import Deposito
 
 from modelos.pedido import Producto
 
-def cargar_productos_desde_json(archivo="stock.json"):
-    with open(archivo, "r", encoding="utf-8") as f:
-        data = json.load(f)
+def cargar_productos_desde_json(deposito):
+    data = deposito.cargar_stock()
+    # with open(archivo, "r", encoding="utf-8") as f:
+    #     data = json.load(f)
 
     productos = []
 
@@ -23,10 +25,19 @@ def cargar_productos_desde_json(archivo="stock.json"):
 
     return productos
 
-def seleccionar_productos(stock):
-    productos_disponibles = cargar_productos_desde_json(stock)
+def seleccionar_productos(deposito):
+    
+    print("++++BIENVENIDO AL SISTEMA DE COMPRAS ONLINE++++")
+    
     #  Datos del cliente
-    cliente = input(" Ingrese su nombre: ").strip()
+    while True:
+        productos_disponibles = cargar_productos_desde_json(deposito)
+        cliente = input(" Ingrese su nombre: ").strip()
+        if cliente.strip():
+            break
+        else: 
+             print(" Nombre inválido. Intente nuevamente.")
+    
     while True:
         email = input(" Ingrese su email: ").strip()
 
@@ -35,9 +46,14 @@ def seleccionar_productos(stock):
         else:
             print(" Email inválido. Intente nuevamente.")
 
-    direccion = input(" Ingrese su dirección de envío: ").strip()
+    while True:
+        direccion = input(" Ingrese su dirección de envío: ").strip()
+        if direccion.strip():
+            break
+        else:
+            print(" Direccion inválido. Intente nuevamente.")
 
-    # Selección de productos
+    #Selección de productos
     seleccionados = []
     while True:
         print("\n Lista de productos disponibles:")
@@ -66,13 +82,14 @@ def seleccionar_productos(stock):
 
         productos_disponibles[indice].cantidad_solicitada = cantidad
         seleccionados.append(productos_disponibles[indice])
-        print(f" Agregado: {productos_disponibles[indice].nombre} x{cantidad}")
+        print(f" Agregado: {productos_disponibles[indice].nombre} Cantidad:{cantidad}")
 
         continuar = input("¿Desea agregar otro producto? (s/n): ").strip().lower()
         #Aca el profe ingreso x, y se procedió a la forma de pago.
         while (continuar != "n" and continuar != "s"): 
             print("Ingrese (s/n)")
             continuar = input("¿Desea agregar otro producto? (s/n): ").strip().lower()
+            #LLAMAR A UNA FUNCION DE RESERVA
         if continuar == "n":
             break
 
