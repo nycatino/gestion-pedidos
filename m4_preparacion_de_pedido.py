@@ -19,10 +19,11 @@ class ModuloPreparacion:
 
     def confirmar_preparacion(self, picking_list, tiempo_estimado_preparacion):
         #print(f"Picking list: {picking_list}")
+        print("\n---------CONFIRMACION FISICA DE STOCK POR USUARIO DEPOSITO----------\n")
         print("-- Picking List --\n")
         for i in range(len(picking_list)):
-            print(f"Producto {i+1}: [\n  SKU: {picking_list[i]["sku"]}\n  Cantidad: {picking_list[i]["cantidad"]}\n  Ubicacion: {picking_list[i]["ubicacion"]}\n]\n")
-        print(f"Tiempo estimado de preparación: {tiempo_estimado_preparacion} minutos")
+            print(f"Producto {i+1}: [\n             SKU: {picking_list[i]["sku"]}\n             Cantidad: {picking_list[i]["cantidad"]}\n             Ubicacion: {picking_list[i]["ubicacion"]}\n           ]\n")
+        print(f"Tiempo estimado de preparación: {tiempo_estimado_preparacion} minutos\n")
 
         while True:
             respuesta = input("¿Confirmar disponibilidad stock real? (s = sí / n = no / r = rechazar pedido): ").lower().strip()
