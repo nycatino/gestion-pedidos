@@ -85,7 +85,12 @@ while True:
                         continuar = input("\n-- desea ingresar otro medio de pago? (s/n): ").strip().lower()
                         if continuar == "s":
                             pago = definir_pago()
-                            orden_pedido.datos_del_pago = pago ##AGREGO LOS NUEVOS DATOS DEL PAGO Y VUELVO AL INICIO DEL CICLO A VERIFICAR APROBACION
+                            orden_pedido.datos_del_pago =  {"metodo": pago["forma_de_pago"],
+                                                            "total_abonado": pago["total"]
+                                                            } ##AGREGO LOS NUEVOS DATOS DEL PAGO Y VUELVO AL INICIO DEL CICLO A VERIFICAR APROBACION
+                            print (f"\n--------- Pedido ACTUALIZADO CON EXITO ---------\n")
+                            print(orden_pedido)
+                            print (f"-------------------------------------------\n")
                         else: break
         else:#MODULO 2
             #print("stock insuficiente")
