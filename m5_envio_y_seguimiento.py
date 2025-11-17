@@ -21,7 +21,7 @@ class ModuloEnvios:
         carriers = {
             "estandar": "CarrierFast",
             "express": "CarrierExpress",
-            "pickup": "CarrierLocal"
+            "premium": "CarrierLocal"
         }
         return carriers.get(metodo_envio, "CarrierFast")
 
