@@ -12,7 +12,7 @@ def test_seleccionar_carrier():
 
     assert mod.seleccionar_carrier("estandar") == "CarrierFast"
     assert mod.seleccionar_carrier("express") == "CarrierExpress"
-    assert mod.seleccionar_carrier("pickup") == "CarrierLocal"
+    assert mod.seleccionar_carrier("premium") == "CarrierLocal"
     assert mod.seleccionar_carrier("inexistente") == "CarrierFast"  # default
 
 
@@ -79,7 +79,7 @@ def test_envio_guardado_en_store():
         cliente="Laura",
         email="laura@test.com",
         estado="LISTO_PARA_ENVIO",
-        metodo_envio="pickup",
+        metodo_envio="premium",
         productos=[],
         fecha_recepcion=datetime.now(),
         datos_del_pago={"metodo": "efectivo"}
