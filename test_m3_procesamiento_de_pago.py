@@ -1,6 +1,7 @@
+import pytest
 from datetime import datetime
 from modelos.pedido import Pedido
-from m3_procesamiento_de_pago import ModuloPago, Api_banco
+from m3_procesamiento_de_pago import ModuloPago
 
 
 class ApiBancoMock:
@@ -11,6 +12,10 @@ class ApiBancoMock:
     def verificacion(self, numero_operacion):
         return self.respuesta
 
+
+# ------------------------------------------------------
+# Helpers
+# ------------------------------------------------------
 
 def crear_pedido_correcto():
     return Pedido(
@@ -47,13 +52,13 @@ def crear_pedido_incorrecto():
 
 
 # ------------------------------------------------------
-# TESTS
+# TESTS PYTEST
 # ------------------------------------------------------
 
 def test_pago_correcto_con_api_ok():
     pedido = crear_pedido_correcto()
     api = ApiBancoMock(respuesta=True)
-#simula una API donde siempre se verifia el pago
+
     modulo = ModuloPago(pedido, api)
 
     assert modulo.verificar_pago() is True
@@ -70,25 +75,25 @@ def test_pago_falla_si_api_rechaza():
     assert "No se pudo verificar el pago" in modulo.errores
 
 
-# def test_pago_falla_si_monto_incorrecto():
-#     pedido = crear_pedido_incorrecto()
-#     api = ApiBancoMock(respuesta=True)  # API dice OK, pero montos no coinciden
+def test_pago_falla_si_monto_incorrecto():
+    pedido = crear_pedido_incorrecto()
+    api = ApiBancoMock(respuesta=True)  # API dice OK, pero montos no coinciden
 
-#     modulo = ModuloPago(pedido, api)
+    modulo = ModuloPago(pedido, api)
 
-#     assert modulo.verificar_pago() is False
-#     assert "No se pudo verificar el pago" in modulo.errores
+    assert modulo.verificar_pago() is False
+    assert "No se pudo verificar el pago" in modulo.errores
 
 
-# def test_pago_falla_si_api_rechaza_y_monto_mal():
-#     pedido = crear_pedido_incorrecto()
-#     api = ApiBancoMock(respuesta=False)
+def test_pago_falla_si_api_rechaza_y_monto_mal():
+    pedido = crear_pedido_incorrecto()
+    api = ApiBancoMock(respuesta=False)
 
-#     modulo = ModuloPago(pedido, api)
+    modulo = ModuloPago(pedido, api)
 
-#     assert modulo.verificar_pago() is False
-#     assert len(modulo.errores) == 1
-#     assert "No se pudo verificar el pago" in modulo.errores
+    assert modulo.verificar_pago() is False
+    assert len(modulo.errores) == 1
+    assert "No se pudo verificar el pago" in modulo.errores
 
 
 def test_datos_iniciales_se_cargan_correctamente():
@@ -100,12 +105,3 @@ def test_datos_iniciales_se_cargan_correctamente():
     assert modulo.total_a_pagar == 1500
     assert modulo.total_abonado == 1500
     assert modulo.numero_operacion == "OP123"
-
-
-if __name__ == "__main__":
-    test_pago_correcto_con_api_ok()
-    test_pago_falla_si_api_rechaza()
-    # test_pago_falla_si_monto_incorrecto()
-    # test_pago_falla_si_api_rechaza_y_monto_mal()
-    test_datos_iniciales_se_cargan_correctamente()
-    print("\n*** TODOS LOS TESTS PASARON CORRECTAMENTE***")

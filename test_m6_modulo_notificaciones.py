@@ -1,54 +1,33 @@
-from datetime import datetime
-from m6_modulo_notificaciones import modulo_Notificaciones
+import unittest
+from unittest.mock import patch
+from m6_modulo_notificaciones import Modulo_Notificaciones  # ajusta el nombre del archivo si es necesario
 
-def test_pedido_rechazado():
-    # Crear instancia y agregar una lista interna para guardar las notificaciones
-    mod = modulo_Notificaciones()
-    mod.notificaciones = []
+class TestModuloNotificaciones(unittest.TestCase):
 
-    # Datos de prueba
-    cliente = "Juan Pérez"
-    errores = ["Falta método de pago", "Monto inválido"]
+    def setUp(self):
+        self.modulo = Modulo_Notificaciones()
 
-    mensaje = mod.pedido_rechazado(errores, cliente)
+    @patch("builtins.print")
+    def test_pedido_rechazado(self, mock_print):
+        errores = ["Falta stock", "Dirección incorrecta"]
+        self.modulo.pedido_rechazado(errores)
+        # Verificar que print fue llamado con el mensaje correcto
+        expected_message = "\nHola! Tu pedido ha sido rechazado por los siguientes motivos: Falta stock, Dirección incorrecta\n"
+        mock_print.assert_called_with(expected_message)
 
-    # Verificamos el mensaje
-    assert "Juan Pérez" in mensaje
-    assert "rechazado" in mensaje.lower()
-    assert "Monto inválido" in mensaje
+    @patch("builtins.print")
+    def test_enviar_seguimiento(self, mock_print):
+        tracking = "12345XYZ"
+        carrier = "DHL"
+        self.modulo.enviar_seguimiento(tracking, carrier)
+        expected_message = "Hola! Tu pedido está en camino!\nTracking: 12345XYZ\nCarrier: DHL"
+        mock_print.assert_called_with(expected_message)
 
-    # Verificamos que se haya guardado en la lista de notificaciones
-    assert len(mod.notificaciones) == 1
-    noti = mod.notificaciones[0]
-    assert noti["cliente"] == cliente
-    assert "Falta método de pago" in noti["mensaje"]
-    assert isinstance(noti["fecha"], datetime)
-
-
-def test_enviar_seguimiento():
-    mod = modulo_Notificaciones()
-    mod.notificaciones = []
-
-    cliente = "Ana López"
-    tracking = "TRK12345"
-    carrier = "CarrierFast"
-
-    mensaje = mod.enviar_seguimiento(cliente, tracking, carrier)
-
-    # Verificamos el contenido del mensaje
-    assert cliente in mensaje
-    assert tracking in mensaje
-    assert carrier in mensaje
-
-    # Verificamos que se haya guardado correctamente
-    assert len(mod.notificaciones) == 1
-    noti = mod.notificaciones[0]
-    assert noti["cliente"] == cliente
-    assert tracking in noti["mensaje"]
-    assert isinstance(noti["fecha"], datetime)
-
+    @patch("builtins.print")
+    def test_notificar(self, mock_print):
+        mensaje = "Mensaje de prueba"
+        self.modulo.notificar(mensaje)
+        mock_print.assert_called_with(mensaje)
 
 if __name__ == "__main__":
-    test_pedido_rechazado()
-    test_enviar_seguimiento()
-    print("\n*** TODOS LOS TESTS PASARON CORRECTAMENTE***")
+    unittest.main()

@@ -1,4 +1,3 @@
-from datetime import datetime
 from m1_recepcion_del_pedido import RecepcionPedido
 from modelos.pedido import Producto, Pedido
 
@@ -22,7 +21,6 @@ def test_validar_pedido_faltan_campos():
 
     assert not valido
     assert len(r.errores) == 6
-    print("test_validar_pedido_faltan_campos: OK")
 
 
 # ------------------------------------------------------------
@@ -34,8 +32,14 @@ def test_validar_pedido_correcto():
         "cliente": "Juan",
         "email": "juan@mail.com",
         "direccion_envio": "Calle 123",
-        "productos": [{"sku": "A1", "nombre": "Prod", "cantidad_solicitada": 2, "precio": 100}],
-        "datos_del_pago": {"metodo": "transferencia", "total_abonado": 200, "numero_operacion": 999},
+        "productos": [
+            {"sku": "A1", "nombre": "Prod", "cantidad_solicitada": 2, "precio": 100}
+        ],
+        "datos_del_pago": {
+            "metodo": "transferencia",
+            "total_abonado": 200,
+            "numero_operacion": 999
+        },
         "metodo_envio": "express"
     }
 
@@ -44,7 +48,6 @@ def test_validar_pedido_correcto():
 
     assert valido
     assert len(r.errores) == 0
-    print("test_validar_pedido_correcto: OK")
 
 
 # ------------------------------------------------------------
@@ -60,7 +63,11 @@ def test_crear_pedido_ok():
             {"sku": "A1", "nombre": "Yerba", "cantidad_solicitada": 2, "precio": 800},
             {"sku": "A2", "nombre": "Fideos", "cantidad_solicitada": 1, "precio": 500}
         ],
-        "datos_del_pago": {"metodo": "transferencia", "total_abonado": 2100, "numero_operacion": 888},
+        "datos_del_pago": {
+            "metodo": "transferencia",
+            "total_abonado": 2100,
+            "numero_operacion": 888
+        },
         "metodo_envio": "express"
     }
 
@@ -71,14 +78,13 @@ def test_crear_pedido_ok():
     assert pedido.cliente == "Juan"
     assert pedido.metodo_envio == "express"
     assert len(pedido.productos) == 2
-    assert pedido.total_a_pagar == (2*800 + 1*500)
-    print("test_crear_pedido_ok: OK")
+    assert pedido.total_a_pagar == (2 * 800 + 1 * 500)
 
 
 # ------------------------------------------------------------
 # TEST 4: crear_pedido falla si un producto está mal
 # ------------------------------------------------------------
-#se ingresa un producto cuya cantidad_solicitada es un string cuando debería ser un entero. 
+
 def test_crear_pedido_producto_invalido():
     data_mal = {
         "cliente": "Juan",
@@ -87,7 +93,11 @@ def test_crear_pedido_producto_invalido():
         "productos": [
             {"sku": "A1", "nombre": "Yerba", "cantidad_solicitada": "dos", "precio": 800}
         ],
-        "datos_del_pago": {"metodo": "transferencia", "total_abonado": 800, "numero_operacion": 555},
+        "datos_del_pago": {
+            "metodo": "transferencia",
+            "total_abonado": 800,
+            "numero_operacion": 555
+        },
         "metodo_envio": "pickup"
     }
 
@@ -96,7 +106,6 @@ def test_crear_pedido_producto_invalido():
 
     assert pedido is False
     assert len(r.errores) == 1
-    print("test_crear_pedido_producto_invalido: OK")
 
 
 # ------------------------------------------------------------
@@ -117,18 +126,3 @@ def test_errores_acumulados():
     r.validar_pedido()
 
     assert len(r.errores) == 6
-    print("test_errores_acumulados: OK")
-
-
-# ============================================================
-#                     EJECUCIÓN MANUAL
-# ============================================================
-
-if __name__ == "__main__":
-    test_validar_pedido_faltan_campos()
-    test_validar_pedido_correcto()
-    test_crear_pedido_ok()
-    test_crear_pedido_producto_invalido()
-    test_errores_acumulados()
-
-    print("\n*** TODOS LOS TESTS PASARON CORRECTAMENTE***")

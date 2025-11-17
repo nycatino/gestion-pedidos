@@ -3,6 +3,9 @@ from m5_envio_y_seguimiento import ModuloEnvios, Envio
 from modelos.pedido import Pedido, Producto
 
 
+# ============================================================
+# TEST 1 - Selección de carrier
+# ============================================================
 
 def test_seleccionar_carrier():
     mod = ModuloEnvios()
@@ -13,13 +16,21 @@ def test_seleccionar_carrier():
     assert mod.seleccionar_carrier("inexistente") == "CarrierFast"  # default
 
 
+# ============================================================
+# TEST 2 - Generación de tracking: formato correcto
+# ============================================================
+
 def test_generar_tracking_formato():
     mod = ModuloEnvios()
     tracking = mod.generar_tracking()
 
     assert tracking.startswith("TRK-")
-    assert len(tracking) == 4 + 8  # TRK-XXXXXXXX
+    assert len(tracking) == 12      # TRK-XXXXXXXX (8 chars random)
 
+
+# ============================================================
+# TEST 3 - Procesar envío: debe generar un Envio válido
+# ============================================================
 
 def test_procesar_envio_crea_registro():
     mod = ModuloEnvios()
@@ -42,19 +53,23 @@ def test_procesar_envio_crea_registro():
 
     envio = mod.procesar_envio(pedido)
 
-    # Validaciones generales
+    # Validaciones principales
     assert isinstance(envio, Envio)
     assert envio.order_id == "PED001"
     assert envio.carrier == "CarrierExpress"
     assert envio.estado == "CREADO"
     assert envio.tracking_id in mod.envios
 
-    # Verificar historial
+    # Validar historial
     assert isinstance(envio.historial, list)
     assert len(envio.historial) == 1
     assert envio.historial[0]["estado"] == "CREADO"
     assert "fecha" in envio.historial[0]
 
+
+# ============================================================
+# TEST 4 - Verificar que el envío se guarda en el store interno
+# ============================================================
 
 def test_envio_guardado_en_store():
     mod = ModuloEnvios()
@@ -75,11 +90,3 @@ def test_envio_guardado_en_store():
     assert envio.tracking_id in mod.envios
     assert mod.envios[envio.tracking_id].order_id == "PED002"
     assert mod.envios[envio.tracking_id].carrier == "CarrierLocal"
-
-
-if __name__ == "__main__":
-    test_seleccionar_carrier()
-    test_generar_tracking_formato()
-    test_procesar_envio_crea_registro()
-    test_envio_guardado_en_store()
-    print("\n*** TODOS LOS TESTS PASARON CORRECTAMENTE***")
