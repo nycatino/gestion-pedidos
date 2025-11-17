@@ -85,4 +85,4 @@ if __name__ == "__main__":
     test_preparar_pedido_rechazado()
     test_preparar_pedido_repite_y_confirma()
     test_simular_ubicacion_formato()
-    print("Todos los tests de preparación pasaron correctamente.")
+    print("\n*** TODOS LOS TESTS PASARON CORRECTAMENTE***")

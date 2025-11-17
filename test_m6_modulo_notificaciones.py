@@ -51,4 +51,4 @@ def test_enviar_seguimiento():
 if __name__ == "__main__":
     test_pedido_rechazado()
     test_enviar_seguimiento()
-    print("Todos los tests pasaron correctamente.")
+    print("\n*** TODOS LOS TESTS PASARON CORRECTAMENTE***")

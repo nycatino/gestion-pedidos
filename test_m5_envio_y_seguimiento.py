@@ -82,4 +82,4 @@ if __name__ == "__main__":
     test_generar_tracking_formato()
     test_procesar_envio_crea_registro()
     test_envio_guardado_en_store()
-    print("Todos los tests pasaron correctamente.")
+    print("\n*** TODOS LOS TESTS PASARON CORRECTAMENTE***")

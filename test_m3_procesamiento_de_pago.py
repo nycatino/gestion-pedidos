@@ -108,4 +108,4 @@ if __name__ == "__main__":
     # test_pago_falla_si_monto_incorrecto()
     # test_pago_falla_si_api_rechaza_y_monto_mal()
     test_datos_iniciales_se_cargan_correctamente()
-    print("Todos los tests pasaron correctamente.")
+    print("\n*** TODOS LOS TESTS PASARON CORRECTAMENTE***")
